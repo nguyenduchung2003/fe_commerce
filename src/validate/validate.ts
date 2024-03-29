@@ -26,8 +26,8 @@ const emailRegExp =
 //      }
 // }
 export const useSchemasRegister = yup.object().shape({
-     checkEmail: yup.boolean(),
-     name: yup.string().required("Please enter a name"),
+     // checkEmail: yup.boolean(),
+     // name: yup.string().required("Please enter a name"),
      email: yup
           .string()
           .matches(emailRegExp, "Email is not in correct format")
