@@ -1,7 +1,7 @@
 import type { Metadata } from "next"
 import { Inter } from "next/font/google"
 import "../globals.css"
-
+import { SpeedInsights } from "@vercel/speed-insights/next"
 const inter = Inter({
      subsets: ["latin"],
      display: "swap",
@@ -34,6 +34,7 @@ export default function RootLayout({
                          <div className="pt-[90px] grow">{children}</div>
                          <FooterPage />
                     </AuthProvider>
+                    <SpeedInsights />
                </body>
           </html>
      )
