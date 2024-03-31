@@ -21,7 +21,7 @@ import ShoppingCartIcon from "@mui/icons-material/ShoppingCart"
 import { useRouter } from "next/navigation"
 import { useState } from "react"
 import { usePathname } from "next/navigation"
-import { signIn, getCsrfToken, useSession, getProviders } from "next-auth/react"
+import { useSession } from "next-auth/react"
 import { signOut } from "next-auth/react"
 import { signOutAPI } from "@/app/_api/auth"
 const Navbar = () => {
@@ -29,13 +29,12 @@ const Navbar = () => {
      const session = useSession()
 
      const pathname = usePathname()
-     // console.log(pathname)
      const [textSearch, setTextSearch] = useState<string>("")
      const handlerViewHistory = () => {
           if (session.data?.user.AccessToken) {
                router.push("/orderhistory")
           } else {
-               alert("Bạn cần đăng nhập để thêm vào giỏ hàng")
+               alert("You need to log in to add to cart")
           }
      }
      const customSignOut = async () => {
@@ -204,15 +203,15 @@ const Navbar = () => {
                                                                            handlerViewHistory
                                                                       }
                                                                  >
-                                                                      Lịch sử
-                                                                      đơn hàng
+                                                                      Order
+                                                                      history
                                                                  </ListItemButton>
                                                                  <ListItemButton
                                                                       onClick={
                                                                            customSignOut
                                                                       }
                                                                  >
-                                                                      Đăng xuất
+                                                                      Logout
                                                                  </ListItemButton>
                                                             </List>
                                                        </Box>

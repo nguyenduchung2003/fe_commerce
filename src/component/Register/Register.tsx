@@ -14,7 +14,8 @@ import Link from "next/link"
 
 import { useSchemasRegister } from "../../validate/validate"
 import { useRouter } from "next/navigation"
-import { ToastContainer, toast } from "react-toastify"
+import { ToastContainer } from "react-toastify"
+import { toastCustom } from "@/app/_lib/action"
 
 const Register = ({ signUp }: any) => {
      const router = useRouter()
@@ -46,46 +47,21 @@ const Register = ({ signUp }: any) => {
                                         const data = await signUp(account)
                                         console.log(data)
                                         if (data.error) {
-                                             toast.update(
-                                                  toast.loading("Loading..."),
-                                                  {
-                                                       render: "Email đã tồn tại",
-                                                       type: "error",
-                                                       position: "top-right",
-                                                       isLoading: false,
-                                                       autoClose: 2000,
-                                                       hideProgressBar: false,
-                                                       closeOnClick: true,
-                                                       pauseOnHover: true,
-                                                       draggable: true,
-                                                       theme: "light",
-                                                  }
+                                             toastCustom(
+                                                  "error",
+                                                  "Email already exists"
                                              )
                                         } else {
-                                             toast.update(
-                                                  toast.loading("Loading..."),
-                                                  {
-                                                       render: "Đăng ký thành công",
-                                                       type: "success",
-                                                       position: "top-right",
-                                                       isLoading: false,
-                                                       autoClose: 1000,
-                                                       hideProgressBar: false,
-                                                       closeOnClick: true,
-                                                       pauseOnHover: true,
-                                                       draggable: true,
-                                                       theme: "light",
-                                                       onClose: () => {
-                                                            router.push(
-                                                                 "/login"
-                                                            )
-                                                       },
+                                             toastCustom(
+                                                  "success",
+                                                  "Register successfully",
+                                                  () => {
+                                                       router.push("/login")
                                                   }
                                              )
                                         }
                                    } catch (error) {
                                         console.log("Loi", error)
-                                        // alert("Email đã tồn tại")
                                    }
 
                                    actions.setSubmitting(false)

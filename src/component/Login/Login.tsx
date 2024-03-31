@@ -6,7 +6,6 @@ import {
      Box,
      Typography,
      InputAdornment,
-     Divider,
 } from "@mui/material"
 import VisibilityIcon from "@mui/icons-material/Visibility"
 import VisibilityOffIcon from "@mui/icons-material/VisibilityOff"
@@ -21,6 +20,9 @@ const Login = ({ signIn }: { signIn: any }) => {
      const initialValues: MyFormValues = {
           email: "",
           password: "",
+     }
+     const clickLoginGG = () => {
+          signIn("google", { callbackUrl: `http://localhost:3000/` })
      }
      return (
           <>
@@ -37,7 +39,6 @@ const Login = ({ signIn }: { signIn: any }) => {
                                         password: values.password,
                                    }
                                    try {
-                                        // const data = await signIn(account)
                                         const res = await signIn(
                                              "credentials",
                                              {
@@ -47,51 +48,19 @@ const Login = ({ signIn }: { signIn: any }) => {
                                                   callbackUrl: `http://localhost:3000/`,
                                              }
                                         )
-                                        // console.log(res)
-                                        // cookies.set(
-                                        //      "AccessToken",
-                                        //      data.AccessToken
-                                        // )
-                                        // cookies.set(
-                                        //      "RefreshToken",
-                                        //      data.RefreshToken
-                                        // )
-                                        // cookies.set("idUser", data.user_id)
+
                                         if (res.ok) {
                                              router.push("/", {
                                                   scroll: false as unknown as boolean,
                                              })
-                                             // console.log(1)
                                         } else {
                                              alert(
-                                                  "Email hoặc mật khẩu không chính xác"
+                                                  "Email or password is incorrect"
                                              )
                                         }
-
-                                        // router.push("/")
                                    } catch (error) {
-                                        alert(
-                                             "Email hoặc mật khẩu không chính xác"
-                                        )
+                                        alert("Email or password is incorrect")
                                    }
-                                   // const data = await signIn(account)
-                                   // console.log(data)
-                                   // if (!data.user_id) {
-                                   //      alert(
-                                   //           "Email hoặc mật khẩu không chính xác"
-                                   //      )
-                                   // } else {
-                                   //      cookies.set(
-                                   //           "AccessToken",
-                                   //           data.AccessToken
-                                   //      )
-                                   //      cookies.set(
-                                   //           "RefreshToken",
-                                   //           data.RefreshToken
-                                   //      )
-                                   //      cookies.set("idUser", data.user_id)
-                                   //      router.push("/")
-                                   // }
                               }}
                          >
                               {(props) => (
@@ -145,18 +114,21 @@ const Login = ({ signIn }: { signIn: any }) => {
                                              variant="contained"
                                              className="h-[52px] w-[365px] normal-case text-2xl"
                                         >
-                                             Đăng nhập
+                                             Login
                                         </Button>
                                         {/* <Divider variant="inset" /> */}
                                    </Form>
                               )}
                          </Formik>
+                         <Button onClick={clickLoginGG}>
+                              Login with google
+                         </Button>
 
                          <Link
                               href={"/register"}
                               className="hover:bg-[#469436] h-[60px] p-1 w-[180px] bg-[#42b72a] rounded-lg flex text-white justify-center items-center no-underline "
                          >
-                              Tạo tài khoản mới
+                              Create a new account
                          </Link>
                     </Box>
                </Box>

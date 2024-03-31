@@ -6,7 +6,7 @@ import { withAuth } from "next-auth/middleware"
 export default withAuth(
      async function middleware(request: NextRequest) {
           const cookieStore = cookies()
-          const theme = cookieStore.get("AccessToken")
+          const accessToken = cookieStore.get("AccessToken")
 
           const requestHeaders = new Headers(request.headers)
           const response = NextResponse.next({
@@ -17,7 +17,7 @@ export default withAuth(
           })
           response.headers.set(
                "AccessToken_userNow",
-               theme?.value as unknown as string
+               accessToken?.value as unknown as string
           )
           return response
      },

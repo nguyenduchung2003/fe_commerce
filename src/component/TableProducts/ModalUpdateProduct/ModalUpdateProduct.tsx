@@ -1,8 +1,6 @@
 import Button from "@mui/material/Button"
 import Dialog from "@mui/material/Dialog"
 import DialogActions from "@mui/material/DialogActions"
-import DialogContent from "@mui/material/DialogContent"
-import DialogContentText from "@mui/material/DialogContentText"
 import DialogTitle from "@mui/material/DialogTitle"
 import React from "react"
 import { useState } from "react"
@@ -21,14 +19,10 @@ export default function ModalUpdateProduct({
      setOpenModal: React.Dispatch<React.SetStateAction<boolean>>
      updateProduct: (product: products) => Promise<any>
 }) {
-     const [productUpdate, setProductUpdate] = useState()
      const handleClose = () => {
           setOpenModal(false)
      }
-     const handleAgreeUpdate = () => {
-          setOpenModal(false)
-     }
-     // console.log(dataGetAllCategories)
+
      return (
           <React.Fragment>
                <Dialog

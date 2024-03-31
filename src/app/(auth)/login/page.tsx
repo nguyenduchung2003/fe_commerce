@@ -6,7 +6,7 @@ import { signIn } from "next-auth/react"
 const Login = () => {
      return (
           <>
-               <Nav></Nav>
+               {/* <Nav></Nav> */}
                <LoginComponent signIn={signIn}></LoginComponent>
           </>
      )

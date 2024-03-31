@@ -1,13 +1,12 @@
 import CartComponent from "@/component/Cart/Cart"
 import { getProductOrder } from "@/app/_api/users"
-import { cookies } from "next/headers"
-import jwt, { JwtPayload } from "jsonwebtoken"
 import { Box, Button, Typography } from "@mui/material"
+import { checkAccessToken, getUserId } from "@/app/_lib/action"
 import Link from "next/link"
 const Cart = async () => {
-     const cookieStore = cookies()
-     const accessTokenCookies = cookieStore.get("AccessToken")?.value as string
-     if (!cookieStore.has("AccessToken")) {
+     const check = await checkAccessToken()
+     const id = await getUserId()
+     if (!check) {
           return (
                <>
                     <Box className="flex justify-center items-center flex-col">
@@ -26,18 +25,14 @@ const Cart = async () => {
                </>
           )
      }
-     const { id } = jwt.verify(
-          accessTokenCookies,
-          process.env.ACCESS_TOKEN_SECRET as string
-     ) as JwtPayload
 
-     const dataOrder: dataProductsOrder = await getProductOrder(id)
+     const dataOrder: dataProductsOrder = await getProductOrder(id!)
 
      return (
           <>
                <CartComponent
                     productsOrder={dataOrder.productsOrder}
-                    idUserNow={id}
+                    idUserNow={id!}
                />
           </>
      )

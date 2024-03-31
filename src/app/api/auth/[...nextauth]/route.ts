@@ -7,6 +7,7 @@ import { signIn } from "@/app/_api/auth"
 import { NextResponse } from "next/server"
 import { headers } from "next/headers"
 import { jwtDecode } from "jwt-decode"
+import GoogleProvider from "next-auth/providers/google"
 const handler = NextAuth({
      pages: {
           signIn: "/login",
@@ -16,17 +17,7 @@ const handler = NextAuth({
      providers: [
           CredentialsProvider({
                name: "Credentials",
-               // The credentials is used to generate a suitable form on the sign in page.
-               // You can specify whatever fields you are expecting to be submitted.
-               // e.g. domain, username, password, 2FA token, etc.
-               // You can pass any HTML attribute to the <input> tag through the object.
                credentials: {
-                    // username: {
-                    //      label: "Username",
-                    //      type: "text",
-                    //      placeholder: "Username please",
-                    //      required: true,
-                    // },
                     password: {
                          label: "Password",
                          type: "password",
@@ -42,11 +33,6 @@ const handler = NextAuth({
                },
                async authorize(credentials, req) {
                     try {
-                         // const user = await signIn({
-                         //      email: credentials?.email as string,
-                         //      password: credentials?.password as string,
-                         // })
-
                          const res = await fetch(
                               "http://localhost:7070/auth/login",
                               {
@@ -64,18 +50,21 @@ const handler = NextAuth({
                          const user = await res.json()
 
                          if (res.ok) {
-                              // user.email = credentials?.email
-                              // console.log("User", user)
                               cookies().set({
                                    name: "AccessToken",
                                    value: user?.AccessToken,
                                    httpOnly: true,
                                    maxAge: 60 * 58,
-                                   // expires: 60 * 60,
                               })
                               cookies().set({
                                    name: "RefreshToken",
                                    value: user?.RefreshToken,
+                                   httpOnly: true,
+                                   maxAge: 60 * 60 * 24 * 30,
+                              })
+                              cookies().set({
+                                   name: "userid",
+                                   value: user?.id,
                                    httpOnly: true,
                                    maxAge: 60 * 60 * 24 * 30,
                               })
@@ -89,6 +78,17 @@ const handler = NextAuth({
                     }
                },
           }),
+          GoogleProvider({
+               clientId: process.env.GOOGLE_CLIENT_ID!,
+               clientSecret: process.env.GOOGLE_CLIENT_SECRET!,
+               authorization: {
+                    params: {
+                         prompt: "consent",
+                         access_type: "offline",
+                         response_type: "code",
+                    },
+               },
+          }),
      ],
      secret: process.env.NEXTAUTH_SECRET,
      events: {
@@ -98,15 +98,28 @@ const handler = NextAuth({
           },
      },
      callbacks: {
-          // async signIn({ user, account, profile, email, credentials }) {
-          // },
-          // // async redirect({ url, baseUrl }) {
-          // // },
+          async signIn({
+               account,
+               profile,
+          }: {
+               account: any
+               profile?: { email_verified?: boolean; email?: string }
+          }) {
+               if (account && account.provider === "google") {
+                    return (
+                         profile?.email_verified !== undefined &&
+                         profile?.email_verified &&
+                         (profile?.email?.endsWith("@gmail.com") ?? false)
+                    )
+               }
+               return true
+          },
 
           async session({ session, token, user }) {
                if (token.data) {
                     session.user = token.data
                }
+
                return session
           },
           jwt: async ({ token, user }) => {

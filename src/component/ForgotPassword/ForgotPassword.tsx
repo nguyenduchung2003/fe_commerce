@@ -2,8 +2,8 @@
 import { Box, Button, TextField, Typography } from "@mui/material"
 import { useState } from "react"
 import { forgotPassword } from "@/app/_api/auth"
-import { ToastContainer, toast } from "react-toastify"
-import "react-toastify/dist/ReactToastify.css"
+import { ToastContainer } from "react-toastify"
+import { toastCustom } from "@/app/_lib/action"
 import { useRouter } from "next/navigation"
 const ForgotPassword = () => {
      const router = useRouter()
@@ -14,31 +14,13 @@ const ForgotPassword = () => {
      const handleSubmit = async () => {
           const res = await forgotPassword(email)
           if (res.status == "error") {
-               toast.update(toast.loading("Loading..."), {
-                    render: "Email is not registered",
-                    type: "error",
-                    position: "top-right",
-                    isLoading: false,
-                    autoClose: 2000,
-                    hideProgressBar: false,
-                    closeOnClick: true,
-                    pauseOnHover: true,
-                    draggable: true,
-                    theme: "light",
-               })
+               toastCustom("error", "Email is not registered")
           } else {
-               toast.update(toast.loading("Loading..."), {
-                    render: "New password has been sent to your email",
-                    type: "success",
-                    position: "top-right",
-                    isLoading: false,
-                    autoClose: 2000,
-                    hideProgressBar: false,
-                    closeOnClick: true,
-                    pauseOnHover: true,
-                    draggable: true,
-                    theme: "light",
-               })
+               toastCustom(
+                    "success",
+                    "New password has been sent to your email"
+               )
+
                setEmail("")
           }
      }

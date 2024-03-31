@@ -7,7 +7,7 @@ import {
      Pagination,
      PaginationItem,
 } from "@mui/material"
-import { useEffect, useRef, useState } from "react"
+import { useState } from "react"
 import { useRouter } from "next/navigation"
 import Image from "next/image"
 import { useSearchParams } from "next/navigation"

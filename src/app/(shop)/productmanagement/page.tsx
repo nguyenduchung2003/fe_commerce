@@ -2,15 +2,13 @@
 
 import { deleteProduct, updateProduct } from "@/app/_api/admin"
 import { getAllProducts, getAllCategories } from "@/app/_api/allRolls"
-
 import TableProducts from "@/component/TableProducts/TableProducts"
 import { Box, Button, Typography } from "@mui/material"
-import { cookies } from "next/headers"
 import Link from "next/link"
-
+import { checkAccessToken, getUserId } from "@/app/_lib/action"
 const productManagement = async () => {
-     const cookieStore = cookies()
-     if (!cookieStore.has("AccessToken")) {
+     const check = await checkAccessToken()
+     if (!check) {
           return (
                <>
                     <Box className="flex justify-center items-center flex-col">

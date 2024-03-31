@@ -1,12 +1,11 @@
 import OrderHistoryComponent from "@/component/OrderHistory/OrderHistory"
 import { getAllBills } from "@/app/_api/admin"
-import { cookies } from "next/headers"
-import jwt, { JwtPayload } from "jsonwebtoken"
 import { Box, Button, Typography } from "@mui/material"
+import { checkAccessToken } from "@/app/_lib/action"
 import Link from "next/link"
 const OrderHistory = async () => {
-     const cookieStore = cookies()
-     if (!cookieStore.has("AccessToken")) {
+     const check = await checkAccessToken()
+     if (!check) {
           return (
                <>
                     <Box className="flex justify-center items-center flex-col">

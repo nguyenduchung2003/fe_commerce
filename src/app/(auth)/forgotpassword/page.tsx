@@ -4,7 +4,7 @@ import Nav from "@/component/Navbar/Nav"
 const ForgotPassword = () => {
      return (
           <>
-               <Nav></Nav>
+               {/* <Nav></Nav> */}
                <ForgotPasswordComponent />
           </>
      )

@@ -4,7 +4,7 @@ import Nav from "@/component/Navbar/Nav"
 const Register = () => {
      return (
           <>
-               <Nav></Nav>
+               {/* <Nav></Nav> */}
                <RegisterComponent signUp={signUp} />
           </>
      )

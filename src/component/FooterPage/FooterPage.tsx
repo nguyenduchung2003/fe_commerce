@@ -16,31 +16,31 @@ const FooterPage = () => {
                <Box className="flex justify-evenly mt-8 bg-white pt-[20px]">
                     <Box className="flex flex-col gap-2">
                          <Typography className="font-bold mb-[10px]">
-                              Chính sách bảo hành
+                              Warranty Policy
                          </Typography>
-                         <Typography>Trung tâm trợ giúp</Typography>
-                         <Typography>Hướng dẫn mua hàng</Typography>
-                         <Typography>Hướng dẫn bán hàng</Typography>
-                         <Typography>Thanh toán</Typography>
-                         <Typography>Vận chuyển</Typography>
-                         <Typography>Trả hàng & Hoàn tiền</Typography>
-                         <Typography>Chăm sóc khách hàng</Typography>
-                         <Typography>Chính sách bảo hành</Typography>
+                         <Typography>Help Center</Typography>
+                         <Typography>Buying Guide</Typography>
+                         <Typography>Selling Guide</Typography>
+                         <Typography>Payment</Typography>
+                         <Typography>Shipping</Typography>
+                         <Typography>Returns & Refunds</Typography>
+                         <Typography>Customer Care</Typography>
+                         <Typography>Warranty Policy</Typography>
                     </Box>
                     <Box className="h-full flex flex-col gap-2 ">
                          <Typography className="font-bold mb-[10px]">
-                              Giới thiệu về công ty
+                              About Us
                          </Typography>
-                         <Typography>Tuyển dụng</Typography>
-                         <Typography>Điều khoản</Typography>
-                         <Typography>Chính sách bảo mật</Typography>
-                         <Typography>Chính hãng</Typography>
-                         <Typography>Kênh người bán</Typography>
+                         <Typography>Careers</Typography>
+                         <Typography>Terms</Typography>
+                         <Typography>Privacy Policy</Typography>
+                         <Typography>Authentic Products</Typography>
+                         <Typography>Seller Channels</Typography>
                          <Typography>Flash Sales</Typography>
                     </Box>
                     <Box className="flex flex-col gap-2">
                          <Typography className="font-bold mb-[10px]">
-                              Thanh toán
+                              Pay
                          </Typography>
                          <Box className="flex flex-wrap w-[200px] gap-4">
                               {dataImg.map((item, index) => {
@@ -61,7 +61,7 @@ const FooterPage = () => {
                     </Box>
                     <Box className="h-full flex flex-col gap-2">
                          <Typography className="font-bold mb-[10px]">
-                              Theo dõi chúng tôi
+                              Follow Us
                          </Typography>
                          <Typography>Facebook</Typography>
                          <Typography>Instagram</Typography>

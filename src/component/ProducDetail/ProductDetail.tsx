@@ -1,6 +1,5 @@
 "use client"
 import { Typography, Breadcrumbs, Box } from "@mui/material"
-import { useEffect, useState } from "react"
 import Link from "next/link"
 import PictureProduct from "./PictureProduct"
 import ContentProduct from "./ContentProduct"

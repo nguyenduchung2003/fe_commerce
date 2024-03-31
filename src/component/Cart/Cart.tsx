@@ -11,14 +11,14 @@ import {
      Checkbox,
      Typography,
 } from "@mui/material"
-import { useSession } from "next-auth/react"
+
 import Image from "next/image"
 import {
      updateProductToCart,
      deleteProductToCart,
      deleteMultipleProductsInCart,
 } from "@/app/_api/users"
-import { ChangeEvent, useEffect, useState } from "react"
+import { useEffect, useState } from "react"
 import CheckOut from "./CheckOut"
 import cartEmty from "../../../public/Cart.png"
 import { useRouter } from "next/navigation"
@@ -29,8 +29,6 @@ const Cart = ({
      productsOrder: productsOrder[]
      idUserNow: number
 }) => {
-     const session = useSession()
-
      const router = useRouter()
      const [nameUser, setNameUser] = useState<string>("")
      const [phoneUser, setPhoneUser] = useState<string>("")

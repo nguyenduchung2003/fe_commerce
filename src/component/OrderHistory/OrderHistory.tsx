@@ -63,7 +63,6 @@ const OrderHistory = ({
                     setOpen={setOpen}
                     setReason={setReason}
                     reason={reason}
-                    // handlerRejected={handlerRejected}
                     dataModal={dataModal}
                />
                <Table>
@@ -108,22 +107,11 @@ const OrderHistory = ({
                                                             ...bill,
                                                        ])
                                                   }
-                                                  // disabled={
-                                                  //      bill[0].status === 1
-                                                  //           ? true
-                                                  //           : bill[0].status ===
-                                                  //             -1
-                                                  //           ? true
-                                                  //           : false
-                                                  // }
                                              >
                                                   Completed
                                              </Button>
                                              <Button
                                                   onClick={() => {
-                                                       // handlerRejected([
-                                                       //      ...bill,
-                                                       // ])
                                                        setDataModal([...bill])
                                                        handlerOpenModalRejected()
                                                   }}

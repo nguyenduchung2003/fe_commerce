@@ -1,7 +1,6 @@
 import {
      Box,
      Button,
-     Checkbox,
      Divider,
      FormControlLabel,
      Input,
@@ -11,7 +10,7 @@ import {
      Typography,
 } from "@mui/material"
 
-import { ChangeEvent, useEffect, useRef, useState } from "react"
+import { ChangeEvent, useEffect, useState } from "react"
 import { useSession } from "next-auth/react"
 import { useRouter } from "next/navigation"
 

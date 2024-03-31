@@ -21,8 +21,9 @@ import KeyboardArrowUpIcon from "@mui/icons-material/KeyboardArrowUp"
 import { useState } from "react"
 import Image from "next/image"
 import React from "react"
-import { toast, ToastContainer } from "react-toastify"
+import { ToastContainer } from "react-toastify"
 import ModalUpdateProduct from "./ModalUpdateProduct/ModalUpdateProduct"
+import { toastCustom } from "@/app/_lib/action"
 const TableProducts = ({
      data,
      deleteProduct,
@@ -45,47 +46,25 @@ const TableProducts = ({
           Array.from({ length: dataTable.length }, () => false)
      )
      const handlerDeleteVariants = (variantId: number, productID: number) => {
-          toast.update(toast.loading("Loading..."), {
-               render: "Delete variant product success!",
-               type: "success",
-               position: "top-right",
-               isLoading: false,
-               autoClose: 1000,
-               hideProgressBar: false,
-               closeOnClick: true,
-               pauseOnHover: true,
-               draggable: true,
-               theme: "light",
-               onClose: async () => {
+          toastCustom(
+               "success",
+               "Delete variant product success!",
+               async () => {
                     await deleteProduct({
                          productId: productID,
                          variantId: variantId,
                          deleteVariant: true,
                     })
-               },
-          })
+               }
+          )
      }
      const handlerDeleteProducts = (productID: number) => {
-          console.log("productID", productID)
-          toast.update(toast.loading("Loading..."), {
-               render: "Delete product success!",
-               type: "success",
-               position: "top-right",
-               isLoading: false,
-               autoClose: 1000,
-               hideProgressBar: false,
-               closeOnClick: true,
-               pauseOnHover: true,
-               draggable: true,
-               theme: "light",
-               onClose: async () => {
-                    const x = await deleteProduct({
-                         productId: productID,
-                         variantId: 0,
-                         deleteVariant: false,
-                    })
-                    console.log(x)
-               },
+          toastCustom("success", "Delete product success!", async () => {
+               await deleteProduct({
+                    productId: productID,
+                    variantId: 0,
+                    deleteVariant: false,
+               })
           })
      }
      const [productDetail, setProductDetail] = useState<products | undefined>(

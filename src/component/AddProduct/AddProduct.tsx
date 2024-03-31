@@ -23,8 +23,8 @@ import {
 } from "@mui/material"
 import TextareaAutosize from "@mui/material/TextareaAutosize"
 import { uploads, deleteUploads } from "@/app/_api/admin"
-import { toast, ToastContainer } from "react-toastify"
-
+import { ToastContainer } from "react-toastify"
+import { toastCustom } from "@/app/_lib/action"
 interface PropertyType {
      [key: string]: string[]
 }
@@ -73,18 +73,7 @@ const AddProduct = ({
 
      const onFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
           if (!e.target.files || e.target.files[0] == undefined) {
-               toast.update(toast.loading("Loading..."), {
-                    render: "Please upload picture!",
-                    type: "error",
-                    position: "top-right",
-                    isLoading: false,
-                    autoClose: 2000,
-                    hideProgressBar: false,
-                    closeOnClick: true,
-                    pauseOnHover: true,
-                    draggable: true,
-                    theme: "light",
-               })
+               toastCustom("error", "Please upload picture!")
                return
           } else {
                const formData = new FormData()
@@ -274,18 +263,7 @@ const AddProduct = ({
                }
           }
           if (file.length == 0) {
-               toast.update(toast.loading("Loading..."), {
-                    render: "Please upload picture!",
-                    type: "error",
-                    position: "top-right",
-                    isLoading: false,
-                    autoClose: 2000,
-                    hideProgressBar: false,
-                    closeOnClick: true,
-                    pauseOnHover: true,
-                    draggable: true,
-                    theme: "light",
-               })
+               toastCustom("error", "Please upload picture!")
           } else {
                const dataProductAdd = {
                     name: nameP,
@@ -302,21 +280,10 @@ const AddProduct = ({
                     variants: variantssUpdate,
                     productId: productDetail?.id,
                }
-
-               toast.update(toast.loading("Loading..."), {
-                    render: `${
-                         productDetail ? "Update" : "Add"
-                    }product success!`,
-                    type: "success",
-                    position: "top-right",
-                    isLoading: false,
-                    autoClose: 1000,
-                    hideProgressBar: false,
-                    closeOnClick: true,
-                    pauseOnHover: true,
-                    draggable: true,
-                    theme: "light",
-                    onClose: async () => {
+               toastCustom(
+                    "success",
+                    `${productDetail ? "Update" : "Add"}product success!`,
+                    async () => {
                          if (addProduct && !productDetail) {
                               await addProduct(dataProductAdd)
                          } else if (updateProduct) {
@@ -330,8 +297,8 @@ const AddProduct = ({
                          setImage([])
                          setFile([])
                          setProperties([])
-                    },
-               })
+                    }
+               )
           }
      }
      useEffect(() => {
