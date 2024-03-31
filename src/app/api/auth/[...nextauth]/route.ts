@@ -1,13 +1,9 @@
 // "use server"
 import NextAuth, { JWT } from "next-auth"
-import type { NextApiRequest, NextApiResponse } from "next"
+
 import CredentialsProvider from "next-auth/providers/credentials"
 import { cookies } from "next/headers"
-import { signIn } from "@/app/_api/auth"
-import { NextResponse } from "next/server"
-import { headers } from "next/headers"
-import { jwtDecode } from "jwt-decode"
-import GoogleProvider from "next-auth/providers/google"
+
 const handler = NextAuth({
      pages: {
           signIn: "/login",
@@ -76,17 +72,6 @@ const handler = NextAuth({
                     } catch (error) {
                          console.log("Lỗi đăng nhập", error)
                     }
-               },
-          }),
-          GoogleProvider({
-               clientId: process.env.GOOGLE_CLIENT_ID!,
-               clientSecret: process.env.GOOGLE_CLIENT_SECRET!,
-               authorization: {
-                    params: {
-                         prompt: "consent",
-                         access_type: "offline",
-                         response_type: "code",
-                    },
                },
           }),
      ],

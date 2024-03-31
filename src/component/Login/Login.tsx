@@ -21,9 +21,7 @@ const Login = ({ signIn }: { signIn: any }) => {
           email: "",
           password: "",
      }
-     const clickLoginGG = () => {
-          signIn("google", { callbackUrl: `http://localhost:3000/` })
-     }
+
      return (
           <>
                <Box className=" w-full h-full  flex justify-center items-center relative top-[100px]">
@@ -120,9 +118,6 @@ const Login = ({ signIn }: { signIn: any }) => {
                                    </Form>
                               )}
                          </Formik>
-                         <Button onClick={clickLoginGG}>
-                              Login with google
-                         </Button>
 
                          <Link
                               href={"/register"}
