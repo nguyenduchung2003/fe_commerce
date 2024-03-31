@@ -80,7 +80,7 @@ const ContentProduct = ({ dataProduct }: { dataProduct: products }) => {
                setPrice(optionCheck[0]?.price)
                setQuantity(optionCheck[0]?.quantity)
           }
-     }, [variantName, numberQuantity])
+     }, [variantName, numberQuantity, dataProduct.variants, data?.user.id])
 
      const handlerChangeRadio = (
           e: ChangeEvent<HTMLInputElement>,

@@ -83,7 +83,7 @@ const Cart = ({
                []
           )
           setProductsCheckOut(dataCheckOut)
-     }, [checkItems])
+     }, [checkItems, productsOrder])
 
      const handlerCheckOut = () => {
           setOpen(true)

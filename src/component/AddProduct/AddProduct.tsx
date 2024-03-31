@@ -170,7 +170,7 @@ const AddProduct = ({
 
                return updatedMultiple
           })
-     }, [properties, valuesProperties])
+     }, [properties, valuesProperties, multiple])
 
      useEffect(() => {
           const keys = Object.keys(multiple)
@@ -319,7 +319,13 @@ const AddProduct = ({
                     ? priceUpdate
                     : Array.from({ length: multiplePrices.length }, () => 0)
           )
-     }, [properties, multiple])
+     }, [
+          properties,
+          multiple,
+          multiplePrices.length,
+          multipleQuantities.length,
+          productDetail,
+     ])
 
      const handleCategory = (e: SelectChangeEvent<string>) => {
           setCategory(e.target.value)
