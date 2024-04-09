@@ -6,27 +6,25 @@ import React from "react"
 import { useState } from "react"
 import AddProduct from "@/component/AddProduct/AddProduct"
 import { Box } from "@mui/material"
-export default function ModalUpdateProduct({
-    openModal,
-    setOpenModal,
+export default function ModalAddProduct({
+    openModalAdd,
+    setOpenModalAdd,
     dataGetAllCategories,
-    productDetail,
-    updateProduct,
+    addProduct,
 }: {
-    productDetail: products
     dataGetAllCategories: dataGetAllCategoriesType[]
-    openModal: boolean
-    setOpenModal: React.Dispatch<React.SetStateAction<boolean>>
-    updateProduct: (product: products) => Promise<any>
+    openModalAdd: boolean
+    setOpenModalAdd: React.Dispatch<React.SetStateAction<boolean>>
+    addProduct: (product: products) => Promise<any>
 }) {
     const handleClose = () => {
-        setOpenModal(false)
+        setOpenModalAdd(false)
     }
 
     return (
         <React.Fragment>
             <Dialog
-                open={openModal}
+                open={openModalAdd}
                 onClose={handleClose}
                 maxWidth="lg"
                 fullWidth
@@ -37,14 +35,13 @@ export default function ModalUpdateProduct({
                     </Button>
                 </DialogActions>
 
-                <DialogTitle>Update Product</DialogTitle>
+                <DialogTitle>Add Product</DialogTitle>
 
                 <Box className="mt-[0px] ">
                     <AddProduct
                         dataGetAllCategories={dataGetAllCategories}
-                        productDetail={productDetail}
-                        updateProduct={updateProduct}
-                        setOpenModal={setOpenModal}
+                        addProduct={addProduct}
+                        setOpenModalAdd={setOpenModalAdd}
                     />
                 </Box>
             </Dialog>
