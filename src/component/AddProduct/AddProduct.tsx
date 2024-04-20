@@ -176,6 +176,7 @@ const AddProductComponent = ({
     const priceUpdate = productDetail?.variants.map(
         (variant) => variant.price
     ) as number[]
+
     const [multipleQuantities, setMultipleQuantities] = useState<number[]>(
         quantityUpdate || []
     )
@@ -356,11 +357,13 @@ const AddProductComponent = ({
     }
 
     useEffect(() => {
-        setMultipleQuantities((multipleQuantities) =>
-            multipleQuantities.map(() => 0)
-        )
-        setMultiplePrices((multiplePrices) => multiplePrices.map(() => 0))
-    }, [properties])
+        if (!productDetail) {
+            setMultipleQuantities((multipleQuantities) =>
+                multipleQuantities.map(() => 0)
+            )
+            setMultiplePrices((multiplePrices) => multiplePrices.map(() => 0))
+        }
+    }, [properties, productDetail])
 
     const handleCategory = (e: SelectChangeEvent<string>) => {
         setCategory(e.target.value)
