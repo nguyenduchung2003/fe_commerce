@@ -186,7 +186,7 @@ const Navbar = () => {
                                     ) : null}
 
                                     <Box
-                                        className="flex justify-center items-center hover:bg-gray-300 hover:rounded w-[100px] h-[40px]"
+                                        className="flex justify-center items-center hover:bg-gray-300 hover:rounded w-[100px] h-[40px] p-1 "
                                         onClick={() => {
                                             router.push("/")
                                         }}
