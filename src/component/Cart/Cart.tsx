@@ -22,6 +22,8 @@ import { useEffect, useState } from "react"
 import CheckOut from "./CheckOut"
 import cartEmty from "../../../public/Cart.png"
 import { useRouter } from "next/navigation"
+import { toast } from "react-toastify"
+import { toastCustom } from "../Custom/CustomToast"
 const Cart = ({
     productsOrder,
     idUserNow,
@@ -112,6 +114,7 @@ const Cart = ({
             return resultsCheck
         })
         await deleteProductToCart(orderID)
+        toastCustom("success", "Delete product successfully")
     }
     const handlerClickDeleteAll = async () => {
         const orderIdCheck = productsOrder
@@ -128,6 +131,7 @@ const Cart = ({
             return newCheckItem
         })
         await deleteMultipleProductsInCart({ orderID: orderIdCheck })
+        toastCustom("success", "Delete product successfully")
     }
 
     if (!productsOrder || productsOrder.length === 0) {
@@ -291,9 +295,11 @@ const Cart = ({
                                                             product.orderID
                                                         )
                                                     } else {
-                                                        alert(
+                                                        toastCustom(
+                                                            "error",
                                                             `There are only ${product.quantityMax} quantity remaining for this item`
                                                         )
+                                                        return
                                                     }
                                                 }}
                                             >

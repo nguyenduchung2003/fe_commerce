@@ -13,6 +13,7 @@ import { confirmOrder, sendEmail } from "@/app/_api/admin"
 import { useState } from "react"
 import ModalRejected from "./ModalRejected"
 
+import DialogCancelBill from "./DialogCancelBill"
 const OrderHistory = ({
     dataBill,
     checkUser,
@@ -21,6 +22,7 @@ const OrderHistory = ({
     checkUser: boolean
 }) => {
     const [open, setOpen] = useState<boolean>(false)
+    const [openDialog, setOpenDialog] = useState<boolean>(false)
     const [reason, setReason] = useState<string>("")
     const handlerCompleted = async (ArrayBillID: billType[]) => {
         const billID = ArrayBillID.map((bill) => bill.id)
@@ -57,6 +59,8 @@ const OrderHistory = ({
     const handlerOpenModalRejected = () => {
         setOpen(true)
     }
+    const [billCancel, setBillCancel] = useState<any>([])
+
     return (
         <>
             <ModalRejected
@@ -66,6 +70,11 @@ const OrderHistory = ({
                 reason={reason}
                 dataModal={dataModal}
             />
+            <DialogCancelBill
+                openDialog={openDialog}
+                setOpenDialog={setOpenDialog}
+                billCancel={billCancel}
+            />
             <Table>
                 <TableHead>
                     <TableRow>
@@ -73,7 +82,12 @@ const OrderHistory = ({
                         <TableCell>Product</TableCell>
                         <TableCell>Total Price</TableCell>
                         <TableCell>Status</TableCell>
-                        {!checkUser && <TableCell>ConfirmOrder</TableCell>}
+
+                        {!checkUser ? (
+                            <TableCell>ConfirmOrder</TableCell>
+                        ) : (
+                            <TableCell>Action</TableCell>
+                        )}
                     </TableRow>
                 </TableHead>
                 <TableBody>
@@ -98,7 +112,7 @@ const OrderHistory = ({
                                     ? "Rejected"
                                     : "Processing"}
                             </TableCell>
-                            {!checkUser && (
+                            {!checkUser ? (
                                 <TableCell>
                                     <Button
                                         onClick={() =>
@@ -128,6 +142,21 @@ const OrderHistory = ({
                                         }
                                     >
                                         Rejected
+                                    </Button>
+                                </TableCell>
+                            ) : (
+                                <TableCell>
+                                    <Button
+                                        disabled={
+                                            bill[0].status === 0 ? false : true
+                                        }
+                                        onClick={async () => {
+                                            // await cancelBill(bill)
+                                            setBillCancel(bill)
+                                            setOpenDialog(true)
+                                        }}
+                                    >
+                                        Cancel
                                     </Button>
                                 </TableCell>
                             )}

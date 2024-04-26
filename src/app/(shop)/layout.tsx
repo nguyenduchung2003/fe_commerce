@@ -17,7 +17,7 @@ export const metadata: Metadata = {
 }
 export const dynamic = "force-dynamic"
 import "react-toastify/dist/ReactToastify.css"
-
+import { ToastContainer } from "react-toastify"
 export default function RootLayout({
     children,
 }: {
@@ -30,6 +30,7 @@ export default function RootLayout({
                 suppressHydrationWarning={true}
             >
                 <AuthProvider>
+                    <ToastContainer />
                     <Navbar />
                     <div className="pt-[90px] grow">{children}</div>
                     <FooterPage />

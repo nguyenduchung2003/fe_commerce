@@ -22,8 +22,7 @@ import {
     SelectChangeEvent,
 } from "@mui/material"
 import TextareaAutosize from "@mui/material/TextareaAutosize"
-
-import { ToastContainer } from "react-toastify"
+import { toastCustom } from "../Custom/CustomToast"
 
 interface PropertyType {
     [key: string]: string[]
@@ -34,7 +33,6 @@ interface CombineTypes {
     value: string
     [key: string]: string | number
 }
-import { toast, TypeOptions } from "react-toastify"
 
 const AddProductComponent = ({
     dataGetAllCategories,
@@ -81,15 +79,16 @@ const AddProductComponent = ({
             for (let i = 0; i < files.length; i++) {
                 formData.append("image", files[i])
             }
+
             const res = await fetch("http://localhost:7070/admin/upload", {
                 method: "POST",
                 body: formData,
                 cache: "no-store",
             })
-            console.log("res", res)
+
             if (!res.ok) console.log("Failed to fetch uploads img ")
             const data = await res.json()
-            console.log(data)
+
             if (data) {
                 setImage((image) => [...image, data.fileName])
                 setFile((file) => [...file, data.URLImage])
@@ -116,7 +115,7 @@ const AddProductComponent = ({
         setImage((names) => names.filter((nameFile) => nameFile != name))
         setFile((file) => file.filter((file) => file != item))
     }
-    const nameOptionProductUpdate = productDetail?.variants[0].options.map(
+    const nameOptionProductUpdate = productDetail?.variants[0]?.options?.map(
         (option) => option.name
     )
     const [properties, setProperties] = useState<string[]>(
@@ -487,9 +486,9 @@ const AddProductComponent = ({
                                                     height={250}
                                                     alt="Uploaded Image"
                                                     className="object-cover"
-                                                    // priority={true}
                                                     loading="lazy"
                                                 />
+
                                                 <Button
                                                     onClick={() =>
                                                         deletePicture(
@@ -726,22 +725,3 @@ const AddProductComponent = ({
     )
 }
 export default AddProductComponent
-function toastCustom(
-    type: TypeOptions | null | undefined,
-    message: string,
-    options?: (<T = {}>(props: T) => void) | null | undefined
-) {
-    return toast.update(toast.loading("Loading..."), {
-        render: message,
-        type: type,
-        position: "top-right",
-        isLoading: false,
-        autoClose: 1000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        theme: "light",
-        onClose: options,
-    })
-}

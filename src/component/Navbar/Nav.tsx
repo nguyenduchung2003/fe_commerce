@@ -25,6 +25,7 @@ import { useSession } from "next-auth/react"
 import { signOut } from "next-auth/react"
 import { signOutAPI } from "@/app/_api/auth"
 import { checkAccessToken } from "@/app/_lib/action"
+import { toastCustom } from "../Custom/CustomToast"
 const Navbar = () => {
     const router = useRouter()
     const session = useSession()
@@ -35,7 +36,7 @@ const Navbar = () => {
         if (session.data?.user.AccessToken) {
             router.push("/orderhistory")
         } else {
-            alert("You need to log in to add to cart")
+            toastCustom("error", "You need to log in to add to cart")
         }
     }
     const customSignOut = async () => {
@@ -119,7 +120,8 @@ const Navbar = () => {
                                                                     `/search?q=${textSearch}`
                                                                 )
                                                             } else {
-                                                                alert(
+                                                                toastCustom(
+                                                                    "error",
                                                                     "Please enter search keywords"
                                                                 )
                                                             }
@@ -136,7 +138,8 @@ const Navbar = () => {
                                                         `/search?q=${textSearch}`
                                                     )
                                                 } else {
-                                                    alert(
+                                                    toastCustom(
+                                                        "error",
                                                         "Please enter search keywords"
                                                     )
                                                 }

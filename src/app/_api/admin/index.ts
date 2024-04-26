@@ -2,17 +2,14 @@
 import { revalidateTag } from "next/cache"
 import fetchWithTokenRefresh from "@/app/_api/apiService"
 
-export const uploads = async (formData: FormData) => {
+export const uploadsImage = async (formData: FormData) => {
+    console.log(1)
     console.log("formData", formData)
-    const res = await fetchWithTokenRefresh(
-        "http://localhost:7070/admin/upload",
-        {
-            method: "POST",
-
-            body: formData,
-            cache: "no-store",
-        }
-    )
+    const res = await fetch("http://localhost:7070/admin/upload", {
+        method: "POST",
+        body: formData,
+        cache: "no-store",
+    })
     console.log("res", res)
     if (!res.ok) console.log("Failed to fetch uploads img ")
 
@@ -21,19 +18,16 @@ export const uploads = async (formData: FormData) => {
 }
 // delete uploads
 export const deleteUploads = async (fileName: string) => {
-    const res = await fetchWithTokenRefresh(
-        "http://localhost:7070/admin/delete",
-        {
-            method: "DELETE",
-            headers: {
-                "Content-Type": "application/json",
-            },
-            body: JSON.stringify({
-                fileName: `${fileName}`,
-            }),
-            cache: "no-store",
-        }
-    )
+    const res = await fetch("http://localhost:7070/admin/delete", {
+        method: "DELETE",
+        headers: {
+            "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+            fileName: `${fileName}`,
+        }),
+        cache: "no-store",
+    })
 
     if (!res.ok) console.log("Failed to fetch delete img ", res)
 
@@ -85,7 +79,6 @@ export const deleteProduct = async (product: {
     variantId: number
     deleteVariant: boolean
 }) => {
-    console.log("product", product)
     const res = await fetchWithTokenRefresh(
         `http://localhost:7070/admin/deleteProduct?productId=${product.productId}&variantId=${product.variantId}&deleteVariant=${product.deleteVariant}`,
         {

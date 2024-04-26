@@ -1,6 +1,7 @@
 "use server"
 import { revalidateTag } from "next/cache"
 import fetchWithTokenRefresh from "@/app/_api/apiService"
+import { error } from "console"
 // get all products order
 export async function getProductOrder(userId: number) {
     const res = await fetchWithTokenRefresh(
@@ -112,7 +113,12 @@ export async function payToCart(payToCart: payToCart) {
         }
     )
 
-    if (!res.ok) console.log("Failed to fetch data payToCart")
+    if (!res.ok) {
+        return {
+            error: true,
+            message: "Failed to fetch data payToCart",
+        }
+    }
     revalidateTag("getProductOrder")
     revalidateTag("getBill")
     const data = await res.json()
@@ -132,6 +138,24 @@ export async function getBill(userId: number) {
         }
     )
     if (!res.ok) console.log("Failed to fetch data getBill")
+    const data = await res.json()
+    return data
+}
+//cancel bill
+export async function cancelBill(bill: any) {
+    const res = await fetchWithTokenRefresh(
+        `http://localhost:7070/user/cancelBill`,
+        {
+            method: "POST",
+            cache: "no-store",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify({ bill }),
+        }
+    )
+    if (!res.ok) console.log("Failed to fetch data cancelBill")
+    revalidateTag("getBill")
     const data = await res.json()
     return data
 }

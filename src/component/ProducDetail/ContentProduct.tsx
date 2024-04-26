@@ -15,7 +15,8 @@ import { useSession } from "next-auth/react"
 import { useRouter } from "next/navigation"
 
 import { addProductToCart } from "@/app/_api/users"
-
+import { toast } from "react-toastify"
+import { toastCustom } from "../Custom/CustomToast"
 const ContentProduct = ({ dataProduct }: { dataProduct: products }) => {
     const { data } = useSession()
 
@@ -122,14 +123,14 @@ const ContentProduct = ({ dataProduct }: { dataProduct: products }) => {
         })
 
         if (!data?.user.AccessToken) {
-            alert("You need to log in to add to cart.")
+            toastCustom("error", "You need to log in to add to cart.")
         } else if (optionCheck.length == 0) {
-            alert("Please select product variation first")
+            toastCustom("error", "Please select product variation first")
         } else if (quantity <= 0) {
-            alert("This product is out of stock")
+            toastCustom("error", "This product is out of stock")
         } else if (data?.user.AccessToken && quantity > 0) {
             await addProductToCart(orderProduct)
-            alert("Item has been added to your shopping cart")
+            toastCustom("success", "Item has been added to your shopping cart")
         }
     }
     const handlerAddToCartNow = async () => {
@@ -144,11 +145,11 @@ const ContentProduct = ({ dataProduct }: { dataProduct: products }) => {
             })
         })
         if (!data?.user.AccessToken) {
-            alert("You need to log in to add to cart.")
+            toastCustom("error", "You need to log in to add to cart.")
         } else if (optionCheck.length == 0) {
-            alert("Please select product variation first")
+            toastCustom("error", "Please select product variation first")
         } else if (quantity <= 0) {
-            alert("This product is out of stock")
+            toastCustom("error", "This product is out of stock")
         } else if (data?.user.AccessToken && quantity > 0) {
             await addProductToCart(orderProduct)
             router.push("/cart")
@@ -207,11 +208,11 @@ const ContentProduct = ({ dataProduct }: { dataProduct: products }) => {
                             : `${
                                   dataProduct.variants &&
                                   dataProduct.variants.length > 0
-                                      ? `${Math.min(
+                                      ? `$${Math.min(
                                             ...dataProduct.variants.map(
                                                 (variant) => variant.price
                                             )
-                                        )} - ${Math.max(
+                                        )} - $${Math.max(
                                             ...dataProduct.variants.map(
                                                 (variant) => variant.price
                                             )

@@ -21,7 +21,7 @@ import KeyboardArrowUpIcon from "@mui/icons-material/KeyboardArrowUp"
 import { useState } from "react"
 import Image from "next/image"
 import React from "react"
-import { ToastContainer } from "react-toastify"
+import { toast, ToastContainer } from "react-toastify"
 import ModalUpdateProduct from "./ModalUpdateProduct/ModalUpdateProduct"
 import ModalAddProduct from "./ModalAddProduct/ModalAddProduct"
 import { toastCustom } from "../Custom/CustomToast"
@@ -59,12 +59,12 @@ const TableProducts = ({
         })
     }
     const handlerDeleteProducts = async (productID: number) => {
-        toastCustom("success", "Delete product success!")
-        console.log("delete product", productID)
-        await deleteProduct({
-            productId: productID,
-            variantId: 0,
-            deleteVariant: false,
+        toastCustom("success", "Delete product success!", async () => {
+            await deleteProduct({
+                productId: productID,
+                variantId: 0,
+                deleteVariant: false,
+            })
         })
     }
     const [productDetail, setProductDetail] = useState<products | undefined>(
