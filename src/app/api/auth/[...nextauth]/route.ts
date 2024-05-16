@@ -124,7 +124,9 @@ const handler = NextAuth({
                             "Content-Type": "application/json",
                         },
                         body: JSON.stringify({
-                            token: (token as unknown as JWT).data.RefreshToken,
+                            token:
+                                (token as unknown as JWT).data.RefreshToken ||
+                                token?.RefreshToken,
                         }),
                         cache: "no-store",
                     }

@@ -12,6 +12,7 @@ import { useEffect, useRef, useState } from "react"
 import { useRouter } from "next/navigation"
 import SearchIcon from "@mui/icons-material/Search"
 import { toastCustom } from "../Custom/CustomToast"
+import HoverEffect from "../CardHoverEffect/CardHoverEffect"
 const DetailCategory = ({ data }: { data: arrayProducts }) => {
     const router = useRouter()
     const [loading, setLoading] = useState(true)
@@ -72,56 +73,7 @@ const DetailCategory = ({ data }: { data: arrayProducts }) => {
             </Box>
             <Box>
                 {data.products.length > 0 ? (
-                    <Box className="flex  flex-wrap   gap-6 ">
-                        {data?.products.map((item: any, index: number) => {
-                            return (
-                                <Box
-                                    key={index}
-                                    className="w-[300px] h-[350px]  flex flex-col justify-center item-center shadow-lg shadow-black bg-white"
-                                    onClick={() =>
-                                        handleViewDetail(item.id as number)
-                                    }
-                                >
-                                    <Box className="w-full h-[300px]  flex items-center justify-center ">
-                                        {loading && (
-                                            <Skeleton
-                                                variant="rectangular"
-                                                width="100%"
-                                                // height="100%"
-                                            />
-                                        )}
-
-                                        <Image
-                                            src={item.image[0] as string}
-                                            alt="Picture  product details"
-                                            className="w-[100%] h-[100%] object-cover"
-                                            width="0"
-                                            height="0"
-                                            sizes="100vw"
-                                            onLoad={() => setLoading(false)}
-                                            priority={true}
-                                        />
-                                    </Box>
-                                    <Divider className="h-[10px]" />
-                                    <Box className="flex justify-evenly items-center h-[40px]">
-                                        <Typography className="text-center w-[70%]">
-                                            {item.name}
-                                        </Typography>
-                                        <Typography className="w-30%">
-                                            $
-                                            {Math.min(
-                                                ...item.variants.map(
-                                                    (variant: any) => {
-                                                        return variant.price
-                                                    }
-                                                )
-                                            )}
-                                        </Typography>
-                                    </Box>
-                                </Box>
-                            )
-                        })}
-                    </Box>
+                    <HoverEffect items={data?.products}></HoverEffect>
                 ) : (
                     <Typography>Now, list don't have product</Typography>
                 )}

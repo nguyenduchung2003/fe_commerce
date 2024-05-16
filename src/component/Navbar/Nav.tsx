@@ -49,7 +49,10 @@ const Navbar = () => {
 
     return (
         <>
-            <Box className="fixed w-full bg-white z-50 top-0 left-0 right-0">
+            <Box
+                className="fixed w-full bg-white z-[100] top-0 left-0 right-0"
+                id="navBar"
+            >
                 <Box className="flex justify-center items-center  h-[80px] w-full bg-white">
                     <Box className="flex justify-center items-center w-[90%] h-full">
                         <Box className="flex justify-center items-center h-full ">
