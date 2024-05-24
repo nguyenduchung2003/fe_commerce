@@ -103,6 +103,7 @@ const TypewriterEffectSmooth = ({
     words,
     className,
     cursorClassName,
+    check,
 }: {
     words: {
         text: string
@@ -110,6 +111,7 @@ const TypewriterEffectSmooth = ({
     }[]
     className?: string
     cursorClassName?: string
+    check: boolean
 }) => {
     // split text inside of words into array of characters
     const wordsArray = words.map((word) => {
@@ -160,7 +162,11 @@ const TypewriterEffectSmooth = ({
                 }}
             >
                 <div
-                    className="text-xs sm:text-base md:text-xl lg:text:3xl xl:text-5xl font-bold"
+                    className={`${
+                        check
+                            ? "text-base"
+                            : "text-xs sm:text-base md:text-xl lg:text:3xl xl:text-5xl"
+                    } font-bold`}
                     style={{
                         whiteSpace: "nowrap",
                     }}
@@ -168,24 +174,26 @@ const TypewriterEffectSmooth = ({
                     {renderWords()}{" "}
                 </div>{" "}
             </motion.div>
-            <motion.span
-                initial={{
-                    opacity: 0,
-                }}
-                animate={{
-                    opacity: 1,
-                }}
-                transition={{
-                    duration: 0.8,
+            {check ? (
+                <motion.span
+                    initial={{
+                        opacity: 0,
+                    }}
+                    animate={{
+                        opacity: 1,
+                    }}
+                    transition={{
+                        duration: 0.8,
 
-                    repeat: Infinity,
-                    repeatType: "reverse",
-                }}
-                className={cn(
-                    "block rounded-sm w-[4px]  h-4 sm:h-6 xl:h-12 ",
-                    cursorClassName
-                )}
-            ></motion.span>
+                        repeat: Infinity,
+                        repeatType: "reverse",
+                    }}
+                    className={cn(
+                        "block rounded-sm w-[4px]  h-4  bg-blue-500",
+                        cursorClassName
+                    )}
+                ></motion.span>
+            ) : null}
         </div>
     )
 }

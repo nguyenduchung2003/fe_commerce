@@ -91,14 +91,14 @@ const HomeComponent = ({
     }, [])
 
     return (
-        <Box className="flex justify-center items-center flex-col gap-3 w-full h-full">
+        <Box className="flex justify-center items-center flex-col gap-3 w-full h-full ">
             <Box className="flex justify-center items-center flex-col  w-full">
-                <TypeWriter words={words}></TypeWriter>
+                <TypeWriter words={words} check={false}></TypeWriter>
                 <Typography variant="h4" className="">
                     We have the best products at the best prices
                 </Typography>
             </Box>
-            <Box className="flex justify-center items-center flex-col  w-full">
+            <Box className="flex justify-center items-center flex-col  w-full h-[1250px]">
                 <Box
                     className={`w-full h-10 text-center bg-black text-white leading-[40px]  ${
                         check ? "sticky top-[80px] z-[51]" : "static"
@@ -125,8 +125,8 @@ const HomeComponent = ({
                     )}
                 />
             </Box>
-
             <Divider className="w-full" />
+
             <Box
                 className={`w-full h-10 text-center bg-black text-white leading-[40px]`}
             >

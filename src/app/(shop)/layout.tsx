@@ -18,6 +18,7 @@ export const metadata: Metadata = {
 export const dynamic = "force-dynamic"
 import "react-toastify/dist/ReactToastify.css"
 import { ToastContainer } from "react-toastify"
+import AI from "@/component/AI/AI"
 export default function RootLayout({
     children,
 }: {
@@ -33,6 +34,7 @@ export default function RootLayout({
                     <ToastContainer />
                     <Navbar />
                     <div className="pt-[90px] grow">{children}</div>
+                    <AI></AI>
                     <FooterPage />
                 </AuthProvider>
                 <SpeedInsights />

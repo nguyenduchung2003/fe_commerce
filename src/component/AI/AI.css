@@ -1,0 +1,12 @@
+.triangle::before {
+    width: 0;
+    height: 0;
+    position: absolute;
+    content: "";
+    left: 50%;
+    transform: translateX(-50%);
+    bottom: -20px;
+    border-left: 13px solid transparent;
+    border-right: 13px solid transparent;
+    border-top: 26px solid rgb(209, 213, 219);
+}

@@ -122,6 +122,9 @@ const Navbar = () => {
                                                                 router.push(
                                                                     `/search?q=${textSearch}`
                                                                 )
+                                                                setTextSearch(
+                                                                    ""
+                                                                )
                                                             } else {
                                                                 toastCustom(
                                                                     "error",
@@ -140,6 +143,7 @@ const Navbar = () => {
                                                     router.push(
                                                         `/search?q=${textSearch}`
                                                     )
+                                                    setTextSearch("")
                                                 } else {
                                                     toastCustom(
                                                         "error",

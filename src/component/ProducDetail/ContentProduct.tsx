@@ -292,7 +292,7 @@ const ContentProduct = ({ dataProduct }: { dataProduct: products }) => {
                                                                             )
                                                                                 ? "text-red-700 border border-red-700 border-solid bg-gray-200"
                                                                                 : "text-black border border-black border-solid"
-                                                                        }`}
+                                                                        } border-2 p-2 rounded-md`}
                                                                     />
                                                                 )
                                                             }
