@@ -25,17 +25,18 @@ export default withAuth(
     {
         callbacks: {
             authorized: ({ token, req }) => {
-                // const role = (token as unknown as tokenJWT)?.data?.role
-                // const pathname = req.nextUrl.pathname
+                const role = (token as unknown as tokenJWT)?.data?.role
+                const pathname = req.nextUrl.pathname
 
-                // if (
-                //     (pathname.startsWith("/productmanagement/") ||
-                //         pathname === "/confirmorder" ||
-                //         pathname === "/productmanagement") &&
-                //     role !== "ADMIN"
-                // ) {
-                //     return false
-                // }
+                if (
+                    (pathname.startsWith("/productmanagement/") ||
+                        pathname === "/confirmorder" ||
+                        pathname === "/productmanagement" ||
+                        pathname === "/chat") &&
+                    role !== "ADMIN"
+                ) {
+                    return false
+                }
 
                 return true
             },
