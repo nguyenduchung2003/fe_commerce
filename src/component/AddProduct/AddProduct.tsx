@@ -1,6 +1,6 @@
 "use client"
 import Image from "next/image"
-import { ChangeEvent, useEffect, useState } from "react"
+import { ChangeEvent, useEffect, useRef, useState } from "react"
 import {
     Box,
     Input,
@@ -23,6 +23,7 @@ import {
 } from "@mui/material"
 import TextareaAutosize from "@mui/material/TextareaAutosize"
 import { toastCustom } from "../Custom/CustomToast"
+import DialogUpdateChip from "./DialogUpdateChip"
 
 interface PropertyType {
     [key: string]: string[]
@@ -32,6 +33,16 @@ interface CombineTypes {
     name: string
     value: string
     [key: string]: string | number
+}
+interface option {
+    option_id?: number
+    name: string
+    value: string
+}
+interface optionUpdate {
+    option: option[]
+    quantity: number
+    price: number
 }
 
 const AddProductComponent = ({
@@ -168,20 +179,39 @@ const AddProductComponent = ({
             option_id?: number
         }[][]
     >(productDetail ? combinesProductUpdate : [])
-    const quantityUpdate = productDetail?.variants.map(
-        (variant) => variant.quantity
-    ) as number[]
 
-    const priceUpdate = productDetail?.variants.map(
-        (variant) => variant.price
-    ) as number[]
+    // const quantityUpdate = productDetail?.variants.map(
+    //     (variant) => variant.quantity
+    // ) as number[]
 
-    const [multipleQuantities, setMultipleQuantities] = useState<number[]>(
-        quantityUpdate || []
-    )
-    const [multiplePrices, setMultiplePrices] = useState<number[]>(
-        priceUpdate || []
-    )
+    // const priceUpdate = productDetail?.variants.map(
+    //     (variant) => variant.price
+    // ) as number[]
+
+    // const [multipleQuantities, setMultipleQuantities] = useState<number[]>(
+    //     quantityUpdate || []
+    // )
+    // const [multiplePrices, setMultiplePrices] = useState<number[]>(
+    //     priceUpdate || []
+    // )
+    const [multipleQuantities, setMultipleQuantities] = useState<number[]>([])
+    const [multiplePrices, setMultiplePrices] = useState<number[]>([])
+    const options = productDetail?.variants.map((variant) => {
+        return {
+            option: variant.options.map((option) => {
+                return {
+                    option_id: option?.option_id,
+                    name: option.name,
+                    value: option.value,
+                }
+            }),
+            quantity: variant.quantity,
+            price: variant.price,
+        }
+    })
+    const [optionsProductUpdate, setOptionsProductUpdate] = useState<
+        optionUpdate[]
+    >(options || [])
 
     useEffect(() => {
         properties.forEach((property) => {
@@ -195,6 +225,7 @@ const AddProductComponent = ({
                 }))
             }
         })
+
         setMultiple((multiple) => {
             const updatedMultiple = { ...multiple }
             const keyFilter = Object.keys(updatedMultiple).filter(
@@ -206,9 +237,11 @@ const AddProductComponent = ({
 
             return updatedMultiple
         })
-    }, [properties, valuesProperties, multiple])
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [properties, valuesProperties])
 
     useEffect(() => {
+        console.log("thay doi 243")
         const keys = Object.keys(multiple)
         const values = Object.values(multiple)
 
@@ -261,6 +294,82 @@ const AddProductComponent = ({
         })
 
         setCombine(combinationsFilter)
+
+        setOptionsProductUpdate((optionsProductUpdate) => {
+            const customOptionsProductUpdate = [...optionsProductUpdate]
+
+            // const newOptionsProductUpdate = combinationsFilter.filter(
+            //     (item) =>
+            //         !customOptionsProductUpdate.some((option) =>
+            //             option.option.every((optionItem, index) => {
+            //                 return (
+            //                     optionItem.name === item[index].name &&
+            //                     optionItem.value === item[index].value
+            //                 )
+            //             })
+            //         )
+            // )
+            // const newOptionsProductUpdate = combinationsFilter.filter(
+            //     (item) =>
+            //         !customOptionsProductUpdate.every(
+            //             (option) =>
+            //                 option.option.length === item.length &&
+            //                 option.option.every((optionItem, index) => {
+            //                     return (
+            //                         optionItem.name === item[index].name &&
+            //                         optionItem.value === item[index].value
+            //                     )
+            //                 })
+            //         )
+            // )
+            // newOptionsProductUpdate.forEach((item) => {
+            //     customOptionsProductUpdate.push({
+            //         option: item,
+            //         quantity: 0,
+            //         price: 0,
+            //     })
+            // })
+            combinationsFilter.forEach((item) => {
+                const existingOption = customOptionsProductUpdate.find(
+                    (option) =>
+                        option.option.length === item.length &&
+                        option.option.every((optionItem, index) => {
+                            return (
+                                optionItem.name === item[index].name &&
+                                optionItem.value === item[index].value
+                            )
+                        })
+                )
+
+                if (!existingOption) {
+                    customOptionsProductUpdate.push({
+                        option: item,
+                        quantity: 0,
+                        price: 0,
+                    })
+                }
+            })
+            const finalCustomOptionsProductUpdate =
+                customOptionsProductUpdate.filter((customOption) =>
+                    combinationsFilter.some(
+                        (item) =>
+                            item.length === customOption.option.length &&
+                            item.every((itemElement: any, index: number) => {
+                                return (
+                                    itemElement.name ===
+                                        customOption.option[index].name &&
+                                    itemElement.value ===
+                                        customOption.option[index].value
+                                )
+                            })
+                    )
+                )
+            // console.log(
+            //     "customOptionsProductUpdate",
+            //     finalCustomOptionsProductUpdate
+            // )
+            return finalCustomOptionsProductUpdate
+        })
     }, [multiple, properties])
 
     const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
@@ -283,23 +392,42 @@ const AddProductComponent = ({
         }
         const variantssUpdate = []
         if (productDetail) {
-            for (
-                let i = 0, j = 0, k = 0, h = 0;
-                i < multipleQuantities.length,
-                    j < multiplePrices.length,
-                    k < combine.length,
-                    h < productDetail.variants.length;
-                i++, j++, k++, h++
-            ) {
+            for (let i = 0; i < optionsProductUpdate.length; i++) {
+                // const optionVariants = {
+                //     variant_id: productDetail.variants[i]?.variant_id,
+                //     options: optionsProductUpdate[i].option,
+                //     quantity: optionsProductUpdate[i].quantity,
+                //     price: optionsProductUpdate[i].price,
+                // }
+                // variantssUpdate.push(optionVariants)
+                const matchingVariant = productDetail.variants.find(
+                    (variant) =>
+                        variant.options.length ===
+                            optionsProductUpdate[i].option.length &&
+                        variant.options.every((optionItem, index) => {
+                            return (
+                                optionItem.name ===
+                                    optionsProductUpdate[i].option[index]
+                                        .name &&
+                                optionItem.value ===
+                                    optionsProductUpdate[i].option[index].value
+                            )
+                        })
+                )
+
                 const optionVariants = {
-                    variant_id: productDetail.variants[h].variant_id,
-                    options: [...productDetail.variants[h].options],
-                    quantity: multipleQuantities[i],
-                    price: multiplePrices[j],
+                    variant_id: matchingVariant
+                        ? matchingVariant.variant_id
+                        : undefined,
+                    options: optionsProductUpdate[i].option,
+                    quantity: optionsProductUpdate[i].quantity,
+                    price: optionsProductUpdate[i].price,
                 }
+
                 variantssUpdate.push(optionVariants)
             }
         }
+
         if (file.length == 0) {
             toastCustom("error", "Please upload picture!")
         } else {
@@ -340,7 +468,9 @@ const AddProductComponent = ({
                             console.log(error)
                         }
                     } else if (updateProduct) {
+                        // console.log("dataProductUpdate", dataProductUpdate)
                         setOpenModal && setOpenModal(false)
+
                         await updateProduct(dataProductUpdate)
                     }
 
@@ -355,54 +485,98 @@ const AddProductComponent = ({
         }
     }
 
-    useEffect(() => {
-        if (!productDetail) {
-            setMultipleQuantities((multipleQuantities) =>
-                multipleQuantities.map(() => 0)
-            )
-            setMultiplePrices((multiplePrices) => multiplePrices.map(() => 0))
-        }
-    }, [properties, productDetail])
+    // useEffect(() => {
+    //     if (!productDetail) {
+    //         setMultipleQuantities((multipleQuantities) =>
+    //             multipleQuantities.map(() => 0)
+    //         )
+    //         setMultiplePrices((multiplePrices) => multiplePrices.map(() => 0))
+    //     }
+    // }, [properties, productDetail])
 
     const handleCategory = (e: SelectChangeEvent<string>) => {
         setCategory(e.target.value)
     }
     const handlerChangePrice = (
         e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
-        index: number
+        index: number,
+        combineProperty: option[]
     ) => {
-        setMultiplePrices((multiplePrices) => {
-            const customMultiplePrices = [...multiplePrices]
-            const newValue = parseInt(e.target.value)
-            if (newValue >= 0) {
-                customMultiplePrices[index] = newValue
+        if (productDetail) {
+            setOptionsProductUpdate((optionsProductUpdate) => {
+                const customOptionsProductUpdate = [...optionsProductUpdate]
+                const newValue = parseInt(e.target.value)
+                if (newValue >= 0) {
+                    const index = customOptionsProductUpdate.findIndex((item) =>
+                        item.option.every((option, index) => {
+                            return (
+                                option.name === combineProperty[index].name &&
+                                option.value === combineProperty[index].value
+                            )
+                        })
+                    )
+
+                    customOptionsProductUpdate[index].price = newValue
+                    return customOptionsProductUpdate
+                }
+                return customOptionsProductUpdate
+            })
+        } else {
+            setMultiplePrices((multiplePrices) => {
+                const customMultiplePrices = [...multiplePrices]
+                const newValue = parseInt(e.target.value)
+                if (newValue >= 0) {
+                    customMultiplePrices[index] = newValue
+                    return customMultiplePrices
+                }
                 return customMultiplePrices
-            }
-            return customMultiplePrices
-        })
+            })
+        }
     }
     const handlerChangeQuantities = (
         e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
-        index: number
+        index: number,
+        combineProperty: option[]
     ) => {
-        setMultipleQuantities((multipleQuantity) => {
-            const customMultipleQuantities = [...multipleQuantity]
-            const newValue = parseInt(e.target.value)
-            if (newValue >= 0) {
-                customMultipleQuantities[index] = newValue
+        if (productDetail) {
+            setOptionsProductUpdate((optionsProductUpdate) => {
+                const customOptionsProductUpdate = [...optionsProductUpdate]
+                const newValue = parseInt(e.target.value)
+                if (newValue >= 0) {
+                    const index = customOptionsProductUpdate.findIndex((item) =>
+                        item.option.every((option, index) => {
+                            return (
+                                option.name === combineProperty[index].name &&
+                                option.value === combineProperty[index].value
+                            )
+                        })
+                    )
+                    customOptionsProductUpdate[index].quantity = newValue || 0
+                    return customOptionsProductUpdate
+                }
+                return customOptionsProductUpdate
+            })
+        } else {
+            setMultipleQuantities((multipleQuantity) => {
+                const customMultipleQuantities = [...multipleQuantity]
+                const newValue = parseInt(e.target.value)
+                if (newValue >= 0) {
+                    customMultipleQuantities[index] = newValue
+                    return customMultipleQuantities
+                }
                 return customMultipleQuantities
-            }
-            return customMultipleQuantities
-        })
+            })
+        }
     }
+    // useEffect(() => {
+    //     console.log("multiple", multiple)
+    //     console.log("optionsProductUpdate", optionsProductUpdate)
+    //     console.log("combine", combine)
+    // }, [])
 
     return (
         <>
             <Box className="flex flex-col justify-center items-center  overflow-x-hidden ">
-                {/* {productDetail ? null : (
-                    <Typography variant="h3">Add new product</Typography>
-                )} */}
-
                 <form
                     method="POST"
                     encType="multipart/form-data"
@@ -425,6 +599,9 @@ const AddProductComponent = ({
                         <Box className="w-[400px]">
                             <Typography>Description</Typography>
                             <TextareaAutosize
+                                style={{
+                                    resize: "none",
+                                }}
                                 required
                                 minRows={3}
                                 placeholder="Enter a description..."
@@ -509,7 +686,9 @@ const AddProductComponent = ({
                             Add variants
                         </Typography>
                         <Autocomplete
-                            disabled={productDetail ? true : false}
+                            disabled={
+                                productDetail?.forSale == 1 ? true : false
+                            }
                             className="w-[400px] "
                             multiple
                             options={[...new Set(inputValuesProperties)]}
@@ -557,7 +736,7 @@ const AddProductComponent = ({
                             <Box className="w-[400px]" key={index}>
                                 <Typography>{value}</Typography>
                                 <Autocomplete
-                                    disabled={productDetail ? true : false}
+                                    // disabled={productDetail ? true : false}
                                     multiple
                                     key={value}
                                     freeSolo
@@ -594,6 +773,11 @@ const AddProductComponent = ({
                                                 {...getTagProps({ index })}
                                                 key={index}
                                                 label={option}
+                                                disabled={
+                                                    productDetail?.forSale == 1
+                                                        ? true
+                                                        : false
+                                                }
                                             />
                                         ))
                                     }}
@@ -681,14 +865,41 @@ const AddProductComponent = ({
                                                     required
                                                     placeholder="Quantity"
                                                     value={
-                                                        multipleQuantities[
-                                                            index
-                                                        ] || 0
+                                                        // multipleQuantities[
+                                                        //     index
+                                                        // ] || 0
+                                                        productDetail
+                                                            ? optionsProductUpdate?.find(
+                                                                  (item) =>
+                                                                      item.option.every(
+                                                                          (
+                                                                              option,
+                                                                              index
+                                                                          ) => {
+                                                                              return (
+                                                                                  option.name ===
+                                                                                      combineProperty[
+                                                                                          index
+                                                                                      ]
+                                                                                          .name &&
+                                                                                  option.value ===
+                                                                                      combineProperty[
+                                                                                          index
+                                                                                      ]
+                                                                                          .value
+                                                                              )
+                                                                          }
+                                                                      )
+                                                              )?.quantity || 0
+                                                            : multipleQuantities[
+                                                                  index
+                                                              ] || 0
                                                     }
                                                     onChange={(e) =>
                                                         handlerChangeQuantities(
                                                             e,
-                                                            index
+                                                            index,
+                                                            combineProperty
                                                         )
                                                     }
                                                 ></TextField>
@@ -698,13 +909,40 @@ const AddProductComponent = ({
                                                     required
                                                     placeholder="Price"
                                                     value={
-                                                        multiplePrices[index] ||
-                                                        0
+                                                        // multiplePrices[index] ||
+                                                        // 0
+                                                        productDetail
+                                                            ? optionsProductUpdate?.find(
+                                                                  (item) =>
+                                                                      item.option.every(
+                                                                          (
+                                                                              option,
+                                                                              index
+                                                                          ) => {
+                                                                              return (
+                                                                                  option.name ===
+                                                                                      combineProperty[
+                                                                                          index
+                                                                                      ]
+                                                                                          .name &&
+                                                                                  option.value ===
+                                                                                      combineProperty[
+                                                                                          index
+                                                                                      ]
+                                                                                          .value
+                                                                              )
+                                                                          }
+                                                                      )
+                                                              )?.price || 0
+                                                            : multiplePrices[
+                                                                  index
+                                                              ] || 0
                                                     }
                                                     onChange={(e) =>
                                                         handlerChangePrice(
                                                             e,
-                                                            index
+                                                            index,
+                                                            combineProperty
                                                         )
                                                     }
                                                 ></TextField>

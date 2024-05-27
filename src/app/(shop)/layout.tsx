@@ -6,6 +6,7 @@ const inter = Inter({
     subsets: ["latin"],
     display: "swap",
     adjustFontFallback: false,
+    preload: true,
 })
 
 import Navbar from "@/component/Navbar/Nav"
@@ -19,11 +20,16 @@ export const dynamic = "force-dynamic"
 import "react-toastify/dist/ReactToastify.css"
 import { ToastContainer } from "react-toastify"
 import AI from "@/component/AI/AI"
+import ChatWithAdmin from "@/component/ChatWithAdmin/ChatWithAdmin"
+import { headers } from "next/headers"
 export default function RootLayout({
     children,
 }: {
     children: React.ReactNode
 }) {
+    const headersList = headers()
+    const header_url = headersList.get("x-url")
+
     return (
         <html lang="en" suppressHydrationWarning>
             <body
@@ -34,9 +40,18 @@ export default function RootLayout({
                     <ToastContainer />
                     <Navbar />
                     <div className="pt-[90px] grow">{children}</div>
-                    <AI></AI>
+                    {header_url === "http://localhost:3000/chat" ? (
+                        ""
+                    ) : (
+                        <>
+                            <AI />
+                            <ChatWithAdmin />
+                        </>
+                    )}
+
                     <FooterPage />
                 </AuthProvider>
+
                 <SpeedInsights />
             </body>
         </html>

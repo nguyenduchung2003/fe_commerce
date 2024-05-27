@@ -1,14 +1,14 @@
-"use client"
 import LoginComponent from "@/component/Login/Login"
-import Nav from "@/component/Navbar/Nav"
-import { signIn } from "next-auth/react"
-
-const Login = () => {
-     return (
-          <>
-               {/* <Nav></Nav> */}
-               <LoginComponent signIn={signIn}></LoginComponent>
-          </>
-     )
+import type { Metadata } from "next"
+export const metadata: Metadata = {
+    title: "Login",
+    description: "Login page",
+}
+const Login = async () => {
+    return (
+        <>
+            <LoginComponent></LoginComponent>
+        </>
+    )
 }
 export default Login

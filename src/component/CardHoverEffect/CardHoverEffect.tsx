@@ -21,7 +21,7 @@ const HoverEffect = ({
         router.push(`/products/${id}`)
     }
     return (
-        <Box className="flex w-full flex-wrap h-full flex-1  justify-center">
+        <Box className="flex w-full flex-wrap h-full flex-1  ">
             {items.map((item: products, index: number) => {
                 return (
                     <Box
@@ -55,7 +55,7 @@ const HoverEffect = ({
                         <Card>
                             <Box className="w-full h-[80%]  flex items-center justify-center ">
                                 <Image
-                                    src={item.image[0] as string}
+                                    src={(item.image[0] as string) || ""}
                                     alt="Picture  product details"
                                     className="w-[100%] h-[100%] object-cover"
                                     width="0"

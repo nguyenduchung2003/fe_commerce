@@ -11,6 +11,8 @@ import {
     List,
     ListItem,
     ListItemButton,
+    Tabs,
+    Tab,
 } from "@mui/material"
 import logo from "public/logo.png"
 import Image from "next/image"
@@ -19,7 +21,7 @@ import HomeIcon from "@mui/icons-material/Home"
 import InsertEmoticonIcon from "@mui/icons-material/InsertEmoticon"
 import ShoppingCartIcon from "@mui/icons-material/ShoppingCart"
 import { redirect, useRouter } from "next/navigation"
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import { usePathname } from "next/navigation"
 import { useSession } from "next-auth/react"
 import { signOut } from "next-auth/react"
@@ -33,10 +35,11 @@ const Navbar = () => {
     const pathname = usePathname()
     const [textSearch, setTextSearch] = useState<string>("")
     const handlerViewHistory = () => {
-        if (session.data?.user.AccessToken) {
+        if (session.data?.user.AccessToken || session.data?.user.email) {
             router.push("/orderhistory")
         } else {
-            toastCustom("error", "You need to log in to add to cart")
+            console.log("session", session.data?.user)
+            toastCustom("error", "You need to log in to view order history")
         }
     }
     const customSignOut = async () => {
@@ -45,6 +48,14 @@ const Navbar = () => {
             // redirect: false,
             callbackUrl: "/",
         })
+    }
+
+    const [value, setValue] = useState<string>(pathname.slice(1) || "")
+    useEffect(() => {
+        console.log("pathname", pathname.slice(1))
+    }, [pathname])
+    const handleChange = (event: React.SyntheticEvent, newValue: string) => {
+        setValue(newValue)
     }
 
     return (
@@ -159,39 +170,72 @@ const Navbar = () => {
                                 </Box>
                                 <Box className="flex justify-center items-center gap-5">
                                     {session.data?.user?.role == "ADMIN" ? (
-                                        <Box className="flex gap-3">
-                                            <Button
-                                                onClick={() => {
-                                                    try {
-                                                        router.push(
-                                                            "/productmanagement"
-                                                        )
-                                                    } catch (error) {
-                                                        console.error(
-                                                            "Failed to navigate:",
-                                                            error
-                                                        )
-                                                    }
+                                        <Box className="w-[300px] ">
+                                            <Tabs
+                                                value={value}
+                                                onChange={handleChange}
+                                                indicatorColor="primary"
+                                                textColor={
+                                                    pathname === "/"
+                                                        ? "inherit"
+                                                        : "primary"
+                                                }
+                                                sx={{
+                                                    "& .MuiTabs-indicator": {
+                                                        display:
+                                                            pathname === "/"
+                                                                ? "none"
+                                                                : "flex",
+                                                    },
                                                 }}
                                             >
-                                                Product Management
-                                            </Button>
-                                            <Button
-                                                onClick={() => {
-                                                    try {
-                                                        router.push(
-                                                            "/confirmorder"
-                                                        )
-                                                    } catch (error) {
-                                                        console.error(
-                                                            "Failed to navigate:",
-                                                            error
-                                                        )
-                                                    }
-                                                }}
-                                            >
-                                                Order management
-                                            </Button>
+                                                <Tab
+                                                    value="productmanagement"
+                                                    label="Product"
+                                                    onClick={() => {
+                                                        try {
+                                                            router.push(
+                                                                "/productmanagement"
+                                                            )
+                                                        } catch (error) {
+                                                            console.error(
+                                                                "Failed to navigate:",
+                                                                error
+                                                            )
+                                                        }
+                                                    }}
+                                                />
+                                                <Tab
+                                                    value="confirmorder"
+                                                    label="Order"
+                                                    onClick={() => {
+                                                        try {
+                                                            router.push(
+                                                                "/confirmorder"
+                                                            )
+                                                        } catch (error) {
+                                                            console.error(
+                                                                "Failed to navigate:",
+                                                                error
+                                                            )
+                                                        }
+                                                    }}
+                                                />
+                                                <Tab
+                                                    value="chat"
+                                                    label="Chat"
+                                                    onClick={() => {
+                                                        try {
+                                                            router.push("/chat")
+                                                        } catch (error) {
+                                                            console.error(
+                                                                "Failed to navigate:",
+                                                                error
+                                                            )
+                                                        }
+                                                    }}
+                                                />
+                                            </Tabs>
                                         </Box>
                                     ) : null}
 
@@ -207,7 +251,7 @@ const Navbar = () => {
                                     {session.status === "authenticated" ? (
                                         <>
                                             <Box className="flex justify-center items-center hover:bg-gray-300 hover:rounded w-[50%] h-[40px]  group/item flex-col p-1">
-                                                <Box className="flex gap-2">
+                                                <Box className="flex gap-1 p-2">
                                                     <InsertEmoticonIcon />
                                                     <Typography>
                                                         {

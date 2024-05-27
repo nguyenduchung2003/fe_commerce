@@ -12,6 +12,7 @@ import {
     IconButton,
     Collapse,
     Box,
+    Checkbox,
 } from "@mui/material"
 import DeleteIcon from "@mui/icons-material/Delete"
 import EditIcon from "@mui/icons-material/Edit"
@@ -25,7 +26,7 @@ import { toast, ToastContainer } from "react-toastify"
 import ModalUpdateProduct from "./ModalUpdateProduct/ModalUpdateProduct"
 import ModalAddProduct from "./ModalAddProduct/ModalAddProduct"
 import { toastCustom } from "../Custom/CustomToast"
-
+import { updateForSale } from "@/app/_api/admin"
 const TableProducts = ({
     data,
     deleteProduct,
@@ -44,6 +45,7 @@ const TableProducts = ({
     addProduct: (product: products) => Promise<any>
 }) => {
     const dataTable = data.products
+
     const router = useRouter()
     const [openModal, setOpenModal] = useState<boolean>(false)
     const [arrayCheck, setArrayCheck] = useState<boolean[]>(
@@ -100,9 +102,11 @@ const TableProducts = ({
                         <TableRow>
                             <TableCell />
                             <TableCell>Name</TableCell>
-
                             <TableCell>Image</TableCell>
                             <TableCell align="center">Description</TableCell>
+                            <TableCell align="center" className="w-[60px]">
+                                For sale
+                            </TableCell>
                             <TableCell align="left">Delete</TableCell>
                             <TableCell align="left">Update</TableCell>
                         </TableRow>
@@ -149,17 +153,38 @@ const TableProducts = ({
                                     </TableCell>
                                     <TableCell
                                         align="center"
-                                        className=" truncate "
+                                        className="w-[700px] truncate "
                                     >
                                         {row.description}
                                     </TableCell>
-
+                                    <TableCell align="center">
+                                        <Checkbox
+                                            checked={
+                                                row.forSale === 1 ? true : false
+                                            }
+                                            disabled={row.forSale === 1}
+                                            onClick={() => {
+                                                toastCustom(
+                                                    "success",
+                                                    "Update for sale success!",
+                                                    async () =>
+                                                        await updateForSale({
+                                                            id: row.id as number,
+                                                            forSale: 1,
+                                                        })
+                                                )
+                                            }}
+                                        ></Checkbox>
+                                    </TableCell>
                                     <TableCell align="left">
                                         <IconButton
                                             onClick={() =>
                                                 handlerDeleteProducts(
                                                     row.id as number
                                                 )
+                                            }
+                                            disabled={
+                                                row.forSale === 1 ? true : false
                                             }
                                         >
                                             <DeleteIcon />
@@ -274,6 +299,12 @@ const TableProducts = ({
                                                                                         variants.variant_id as number,
                                                                                         row.id as number
                                                                                     )
+                                                                                }
+                                                                                disabled={
+                                                                                    row.forSale ===
+                                                                                    1
+                                                                                        ? true
+                                                                                        : false
                                                                                 }
                                                                             >
                                                                                 <DeleteIcon />

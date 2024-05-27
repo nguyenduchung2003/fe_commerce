@@ -9,12 +9,13 @@ export default withAuth(
         const accessToken = cookieStore.get("AccessToken")
 
         const requestHeaders = new Headers(request.headers)
+        requestHeaders.set("x-url", request.url)
         const response = NextResponse.next({
             request: {
-                // New request headers
                 headers: requestHeaders,
             },
         })
+
         response.headers.set(
             "AccessToken_userNow",
             accessToken?.value as unknown as string

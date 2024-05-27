@@ -97,7 +97,6 @@ export const deleteProduct = async (product: {
 }
 // update product
 export const updateProduct = async (productUpdate: products) => {
-    console.log("productUpdate", productUpdate)
     const res = await fetchWithTokenRefresh(
         "http://localhost:7070/admin/updateProduct",
         {
@@ -111,6 +110,31 @@ export const updateProduct = async (productUpdate: products) => {
     )
 
     if (!res.ok) console.log("Failed to fetch data update product ")
+
+    const data = await res.json()
+    revalidateTag("getAllProducts")
+    return data
+}
+export const updateForSale = async ({
+    id,
+    forSale,
+}: {
+    id: number
+    forSale: number
+}) => {
+    const res = await fetchWithTokenRefresh(
+        "http://localhost:7070/admin/updateForSale",
+        {
+            method: "POST",
+            body: JSON.stringify({ id: id, forSale: forSale }),
+            headers: {
+                "Content-Type": "application/json",
+            },
+            cache: "no-store",
+        }
+    )
+
+    if (!res.ok) console.log("Failed to fetch data updateForSale product ")
 
     const data = await res.json()
     revalidateTag("getAllProducts")
@@ -170,6 +194,23 @@ export async function sendEmail(dataSendEmail: {
         }
     )
     if (!res.ok) console.log("Failed to fetch data dataSendEmail")
+    const data = await res.json()
+    return data
+}
+
+export async function getListCustomChat() {
+    const res = await fetchWithTokenRefresh(
+        `http://localhost:7070/admin/getListCustomChat`,
+        {
+            method: "GET",
+            cache: "no-store",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            next: { tags: ["getListCustomChat"] },
+        }
+    )
+    if (!res.ok) console.log("Failed to fetch data getListCustomChat")
     const data = await res.json()
     return data
 }

@@ -6,6 +6,7 @@ import {
     Box,
     Typography,
     InputAdornment,
+    Divider,
 } from "@mui/material"
 import VisibilityIcon from "@mui/icons-material/Visibility"
 import VisibilityOffIcon from "@mui/icons-material/VisibilityOff"
@@ -13,7 +14,9 @@ import { useState } from "react"
 import Link from "next/link"
 import { useRouter } from "next/navigation"
 import { toastCustom } from "../Custom/CustomToast"
-const Login = ({ signIn }: { signIn: any }) => {
+import { signIn } from "next-auth/react"
+import LoginGG from "./LoginGG"
+const Login = () => {
     const router = useRouter()
 
     const [checkEye, setCheckEye] = useState<boolean>(true)
@@ -25,7 +28,7 @@ const Login = ({ signIn }: { signIn: any }) => {
     return (
         <>
             <Box className=" w-full h-full  flex justify-center items-center relative top-[100px]">
-                <Box className="w-[400px] h-[400px] shadow-lg bg-white rounded-lg flex  flex-col gap-5 justify-center items-center p-2">
+                <Box className="w-[400px] h-[full] shadow-lg bg-white rounded-lg flex  flex-col gap-5 justify-center items-center p-2">
                     <Typography variant="h3" className="">
                         Login
                     </Typography>
@@ -44,7 +47,7 @@ const Login = ({ signIn }: { signIn: any }) => {
                                     callbackUrl: `http://localhost:3000/`,
                                 })
 
-                                if (res.ok) {
+                                if (res?.ok) {
                                     router.push("/", {
                                         scroll: false as unknown as boolean,
                                     })
@@ -115,13 +118,24 @@ const Login = ({ signIn }: { signIn: any }) => {
                             </Form>
                         )}
                     </Formik>
-
-                    <Link
-                        href={"/register"}
-                        className="hover:bg-[#469436] h-[60px] p-1 w-[180px] bg-[#42b72a] rounded-lg flex text-white justify-center items-center no-underline "
+                    <Divider
+                        textAlign="center"
+                        className="relative z-[100] text-black w-full"
                     >
-                        Create a new account
-                    </Link>
+                        Login with
+                    </Divider>
+                    <LoginGG />
+                    <Box className="flex  justify-center items-center">
+                        <Typography className="text-black">
+                            Don't have an account?
+                        </Typography>
+                        <Link
+                            href={"/register"}
+                            className="hover:underline  no-underline text-black hover:text-red-600"
+                        >
+                            Create a new account
+                        </Link>
+                    </Box>
                 </Box>
             </Box>
         </>

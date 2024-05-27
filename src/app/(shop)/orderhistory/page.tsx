@@ -3,6 +3,11 @@ import { getBill } from "@/app/_api/users"
 import { Box, Button, Typography } from "@mui/material"
 import { checkAccessToken, getUserId } from "@/app/_lib/action"
 import Link from "next/link"
+import type { Metadata } from "next"
+export const metadata: Metadata = {
+    title: "Order History",
+    description: "Order History page",
+}
 const OrderHistory = async () => {
     const check = await checkAccessToken()
     const id = await getUserId()

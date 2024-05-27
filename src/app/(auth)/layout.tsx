@@ -5,6 +5,7 @@ const inter = Inter({
     subsets: ["latin"],
     display: "swap",
     adjustFontFallback: false,
+    preload: true,
 })
 import { SpeedInsights } from "@vercel/speed-insights/next"
 export const metadata: Metadata = {

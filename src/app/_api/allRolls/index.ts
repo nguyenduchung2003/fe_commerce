@@ -101,3 +101,27 @@ export async function askAI(text: string) {
     const data = await res.json()
     return data
 }
+export async function getListChat({
+    senderId,
+    receiverId,
+}: {
+    senderId: number
+    receiverId: number
+}) {
+    const res = await fetch(`http://localhost:7070/getListChat`, {
+        method: "POST",
+        cache: "no-store",
+        headers: {
+            "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+            senderId: senderId,
+            receiverId: receiverId,
+        }),
+        next: { tags: ["getListChat"] },
+    })
+    if (!res.ok) console.log("Failed to fetch data getListChat")
+
+    const data = await res.json()
+    return data
+}

@@ -144,7 +144,7 @@ const ContentProduct = ({ dataProduct }: { dataProduct: products }) => {
                 })
             })
         })
-        if (!data?.user.AccessToken) {
+        if (!data?.user.AccessToken || !data?.user.id) {
             toastCustom("error", "You need to log in to add to cart.")
         } else if (optionCheck.length == 0) {
             toastCustom("error", "Please select product variation first")
@@ -228,18 +228,18 @@ const ContentProduct = ({ dataProduct }: { dataProduct: products }) => {
                         .filter((value) => Object.keys(value).length > 0)
                         .map((item, index) => {
                             return (
-                                <Box key={index}>
+                                <Box key={`1-${index}`}>
                                     {Object.keys(item).map((key, index) => {
                                         return (
                                             <Box
-                                                key={index}
+                                                key={`2-${index}`}
                                                 className="flex gap-5 items-center "
                                             >
                                                 <Typography>
                                                     {key.toUpperCase()}
                                                 </Typography>
                                                 <RadioGroup
-                                                    key={key}
+                                                    key={`radioGroup-${index}`}
                                                     name={key}
                                                     value={
                                                         variantName.find(
@@ -265,9 +265,7 @@ const ContentProduct = ({ dataProduct }: { dataProduct: products }) => {
                                                             (value, index) => {
                                                                 return (
                                                                     <FormControlLabel
-                                                                        key={
-                                                                            index
-                                                                        }
+                                                                        key={`3-${index}`}
                                                                         control={
                                                                             <Radio className="hidden" />
                                                                         }

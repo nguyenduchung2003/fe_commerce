@@ -8,7 +8,7 @@ const DivisionPage = async ({
     searchParams?: { [key: string]: number | undefined }
 }) => {
     const page: number = (searchParams?.numberPage as number) || 1
-    const perPage: number = (searchParams?.limit as number) || 12
+    const perPage: number = (searchParams?.limit as number) || 8
 
     const dataAllProducts: arrayProducts = await divisionPage(page, perPage)
     const dataAllCategories: dataGetAllCategoriesType[] =

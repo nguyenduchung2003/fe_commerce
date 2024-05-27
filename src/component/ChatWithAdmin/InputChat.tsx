@@ -3,41 +3,47 @@ import { Button, TextField } from "@mui/material"
 import SendIcon from "@mui/icons-material/Send"
 import { FormEvent, useState } from "react"
 import { askAI } from "@/app/_api/allRolls"
-interface AIProps {
+import { useCookies } from "next-client-cookies"
+import socket from "@/utils/socket"
+import { getUserId } from "@/app/_lib/action"
+interface ChatProps {
     question: string
     setQuestion: React.Dispatch<React.SetStateAction<string>>
-    setMessage: React.Dispatch<
-        React.SetStateAction<
-            {
-                role: string
-                message: string
-            }[]
-        >
-    >
     setLoading: React.Dispatch<React.SetStateAction<boolean>>
+    dataChat: message[]
+    setDataChat: React.Dispatch<React.SetStateAction<message[]>>
 }
 const InputChat = ({
     question,
     setQuestion,
-    setMessage,
     setLoading,
-}: AIProps) => {
+    dataChat,
+    setDataChat,
+}: ChatProps) => {
     const handlerSubmit = async (e: FormEvent<HTMLFormElement>) => {
         e.preventDefault()
-        const questions = {
-            role: "user",
-            message: question,
+        if (question == "") {
+            return alert("Please type message")
         }
-        setMessage((prev) => [...prev, questions])
-        setQuestion("")
-        setLoading(true)
-        const response = await askAI(question)
-        const answers = {
-            role: "model",
-            message: response.text,
+        if (question.trim() !== "") {
+            const userId = (await getUserId()) as number
+            const roomId = [3, userId].sort().join("-")
+            socket.emit("on-chat", {
+                message: question,
+                receiverId: 3,
+                senderId: userId,
+                roomId: roomId,
+            })
+            // setDataChat((prev) => [
+            //     ...prev,
+            //     {
+            //         message: question,
+            //         receiverID: 3,
+            //         senderID: userId,
+            //     },
+            // ])
+            setQuestion("")
         }
-        setMessage((prev) => [...prev, answers])
-        setLoading(false)
     }
     return (
         <>

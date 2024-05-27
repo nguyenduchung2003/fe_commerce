@@ -3,7 +3,13 @@ import { getAllBills } from "@/app/_api/admin"
 import { Box, Button, Typography } from "@mui/material"
 import { checkAccessToken } from "@/app/_lib/action"
 import Link from "next/link"
-const OrderHistory = async () => {
+import type { Metadata } from "next"
+export const metadata: Metadata = {
+    title: "Confirm order",
+    description: "Confirm order page",
+}
+
+const Confirmorder = async () => {
     const check = await checkAccessToken()
     if (!check) {
         return (
@@ -30,4 +36,4 @@ const OrderHistory = async () => {
         </>
     )
 }
-export default OrderHistory
+export default Confirmorder

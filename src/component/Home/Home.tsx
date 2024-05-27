@@ -98,7 +98,7 @@ const HomeComponent = ({
                     We have the best products at the best prices
                 </Typography>
             </Box>
-            <Box className="flex justify-center items-center flex-col  w-full h-[1250px]">
+            <Box className="flex  flex-col  w-full ">
                 <Box
                     className={`w-full h-10 text-center bg-black text-white leading-[40px]  ${
                         check ? "sticky top-[80px] z-[51]" : "static"
@@ -114,12 +114,12 @@ const HomeComponent = ({
                 <Pagination
                     count={dataAllProducts.totalPage}
                     shape="rounded"
-                    className="mt-5 "
+                    className="mt-5 w-full flex justify-center items-center "
                     page={pageNow}
                     renderItem={(item) => (
                         <PaginationItem
                             component={Link}
-                            href={`/page?numberPage=${item.page}&limit=12`}
+                            href={`/page?numberPage=${item.page}&limit=8`}
                             {...item}
                         />
                     )}
