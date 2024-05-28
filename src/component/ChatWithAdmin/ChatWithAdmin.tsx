@@ -36,6 +36,8 @@ const ChatWithAdmin = () => {
                                 const dataChat = await getListChat({
                                     senderId: userId as number,
                                     receiverId: 3,
+                                    page: 1,
+                                    pageSize: 13,
                                 })
                                 setDataChat((prev) => dataChat.chat)
                                 console.log(dataChat)

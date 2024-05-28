@@ -5,6 +5,7 @@ import { Box, Button, Paper, Skeleton, Typography } from "@mui/material"
 import { get } from "http"
 import { getUserId } from "@/app/_lib/action"
 import socket from "@/utils/socket"
+import { getListChat } from "@/app/_api/allRolls"
 
 export default function App({
     setOpen,
@@ -41,16 +42,35 @@ export default function App({
     }, [userId])
 
     const messagesEndRef = useRef<null | HTMLDivElement>(null)
+
     const scrollToBottom = () => {
         messagesEndRef.current?.scrollIntoView({ behavior: "smooth" })
     }
     useEffect(() => {
         scrollToBottom()
-    }, [dataChat])
-    useEffect(() => {
-        console.log("dataChat", dataChat)
-    }, [dataChat])
-
+    }, [])
+    useEffect(() => {}, [])
+    const [hasMore, setHasMore] = useState(true)
+    const limitPage = useRef<number>(1)
+    const oldMessages = (e: React.UIEvent<HTMLDivElement>) => {
+        const { scrollTop, scrollHeight, clientHeight } =
+            e.target as HTMLDivElement
+        if (scrollTop === 0 && hasMore) {
+            limitPage.current += 1
+            getListChat({
+                senderId: userId as number,
+                receiverId: 3,
+                page: limitPage.current,
+                pageSize: 13,
+            }).then((res) => {
+                if (res.chat.length === 0) {
+                    setHasMore(false)
+                    return
+                }
+                setDataChat((prev) => [...res.chat])
+            })
+        }
+    }
     return (
         <>
             <Paper className="w-[400px] h-[80vh] flex flex-col items-center justify-around gap-3">
@@ -66,7 +86,10 @@ export default function App({
                     </Button>
                 </Box>
 
-                <Box className="w-[400px]  flex flex-col items-center relative gap-3 overflow-auto h-[70vh]">
+                <Box
+                    className="w-[400px]  flex flex-col items-center relative gap-3 overflow-auto h-[70vh]"
+                    onScroll={oldMessages}
+                >
                     <MessageLeft message="Hello I am support staff, Can I help you?" />
 
                     {dataChat?.map((item, index) => {

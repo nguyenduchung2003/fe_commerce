@@ -104,9 +104,13 @@ export async function askAI(text: string) {
 export async function getListChat({
     senderId,
     receiverId,
+    page,
+    pageSize,
 }: {
     senderId: number
     receiverId: number
+    page: number
+    pageSize?: number
 }) {
     const res = await fetch(`http://localhost:7070/getListChat`, {
         method: "POST",
@@ -117,6 +121,8 @@ export async function getListChat({
         body: JSON.stringify({
             senderId: senderId,
             receiverId: receiverId,
+            page: page,
+            pageSize: pageSize,
         }),
         next: { tags: ["getListChat"] },
     })

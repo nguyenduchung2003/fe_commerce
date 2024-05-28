@@ -190,6 +190,7 @@ const Navbar = () => {
                                                 }}
                                             >
                                                 <Tab
+                                                    className="hover:bg-gray-300 hover:rounded "
                                                     value="productmanagement"
                                                     label="Product"
                                                     onClick={() => {
@@ -206,6 +207,7 @@ const Navbar = () => {
                                                     }}
                                                 />
                                                 <Tab
+                                                    className="hover:bg-gray-300 hover:rounded"
                                                     value="confirmorder"
                                                     label="Order"
                                                     onClick={() => {
@@ -222,6 +224,7 @@ const Navbar = () => {
                                                     }}
                                                 />
                                                 <Tab
+                                                    className="hover:bg-gray-300 hover:rounded"
                                                     value="chat"
                                                     label="Chat"
                                                     onClick={() => {

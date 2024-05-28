@@ -9,7 +9,7 @@ import {
     Divider,
 } from "@mui/material"
 import SendIcon from "@mui/icons-material/Send"
-import { useEffect, useRef, useState } from "react"
+import { use, useEffect, useRef, useState } from "react"
 
 import { useSession } from "next-auth/react"
 import socket from "@/utils/socket"
@@ -29,27 +29,6 @@ const ChatUI = ({ listFriend }: { listFriend: { email: string }[] }) => {
     const [selectedButton, setSelectedButton] = useState<number | null>(null)
     const session = useSession()
     const userId: number = 3
-    const handleSend = (e: any) => {
-        e.preventDefault()
-
-        if (selectedButton == null) {
-            return alert("Please select friend")
-        } else if (input == "") {
-            return alert("Please type message")
-        }
-
-        if (input.trim() !== "") {
-            const roomId = [chatNowFrinedId, userId].sort().join("-")
-
-            socket.emit("on-chat", {
-                message: input,
-                receiverId: chatNowFrinedId,
-                senderId: userId,
-                roomId: roomId,
-            })
-            setInput("")
-        }
-    }
 
     useEffect(() => {
         const roomId = [chatNowFrinedId, userId].sort().join("-")
@@ -69,14 +48,9 @@ const ChatUI = ({ listFriend }: { listFriend: { email: string }[] }) => {
     }
 
     const messagesContainerRef = useRef<HTMLDivElement>(null)
+    const limitPage = useRef(1)
+    const [friendId, setFriendId] = useState<number | undefined>(undefined)
 
-    useEffect(() => {
-        // Cuộn container xuống cuối cùng khi có tin nhắn mới
-        if (messagesContainerRef.current) {
-            messagesContainerRef.current.scrollTop =
-                messagesContainerRef.current.scrollHeight
-        }
-    }, [messagesBox])
     const handlerGetFriendId = async (friend: any, index: any) => {
         const roomId = [friend.id, userId].sort().join("-")
 
@@ -85,11 +59,76 @@ const ChatUI = ({ listFriend }: { listFriend: { email: string }[] }) => {
         const listChats = await getListChat({
             senderId: userId as number,
             receiverId: friend.id,
+            page: 1,
+            pageSize: 13,
         })
-
+        setFriendId(friend.id)
         setMessages(listChats.chat)
         setChatNowFrinedId(friend.id)
         setSelectedButton(index)
+    }
+    const [isLoading, setIsLoading] = useState(false)
+    const [hasMore, setHasMore] = useState(true)
+    // const handleScroll = (e: React.UIEvent<HTMLDivElement>) => {
+    //     const { scrollTop, scrollHeight, clientHeight } =
+    //         e.target as HTMLDivElement
+    //     if (scrollTop === 0) {
+    //         limitMessage.current += 13
+    //         getListChat({
+    //             senderId: userId as number,
+    //             receiverId: friendId!,
+    //             pageSize: limitMessage.current,
+    //         }).then((res) => {
+    //             if (res.chat.length === 0) return
+    //             setMessages((prev) => [...res.chat])
+    //         })
+    //     }
+
+    // }
+    const handleScroll = (e: React.UIEvent<HTMLDivElement>) => {
+        const { scrollTop, scrollHeight, clientHeight } =
+            e.target as HTMLDivElement
+        if (scrollTop === 0 && !isLoading && hasMore) {
+            setIsLoading(true)
+            limitPage.current += 1
+            getListChat({
+                senderId: userId as number,
+                receiverId: friendId!,
+                page: limitPage.current,
+                pageSize: 13,
+            }).then((res) => {
+                if (res.chat.length === 0) {
+                    setHasMore(false)
+                    return
+                }
+                setMessages((prev) => [...res.chat])
+                setIsLoading(false)
+            })
+        }
+    }
+    const handleSend = (e: any) => {
+        e.preventDefault()
+        if (messagesContainerRef.current) {
+            messagesContainerRef.current.scrollTop =
+                messagesContainerRef.current.scrollHeight
+        }
+        if (selectedButton == null) {
+            return alert("Please select friend")
+        } else if (input == "") {
+            return alert("Please type message")
+        }
+
+        if (input.trim() !== "") {
+            const roomId = [chatNowFrinedId, userId].sort().join("-")
+
+            socket.emit("on-chat", {
+                message: input,
+                receiverId: chatNowFrinedId,
+                senderId: userId,
+                roomId: roomId,
+            })
+            setInput("")
+        }
     }
 
     return (
@@ -126,6 +165,8 @@ const ChatUI = ({ listFriend }: { listFriend: { email: string }[] }) => {
                     <Box
                         sx={{ flexGrow: 1, overflow: "auto", p: 2 }}
                         ref={messagesContainerRef}
+                        onScroll={handleScroll}
+                        className=""
                     >
                         {messagesBox
                             // ?.filter(
@@ -143,6 +184,7 @@ const ChatUI = ({ listFriend }: { listFriend: { email: string }[] }) => {
                                 )
                             })}
                     </Box>
+
                     <Box sx={{ p: 2 }}>
                         <Grid container spacing={2} className="relative">
                             <Grid item xs={10}>
